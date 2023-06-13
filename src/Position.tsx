@@ -2,7 +2,7 @@ import React from 'react'
 
 function Position() {
   return (
-    <div className='square'>Position</div>
+    <div className='square'></div>
   )
 }
 

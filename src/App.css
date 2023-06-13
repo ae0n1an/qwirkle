@@ -11,11 +11,6 @@
   padding: 10px;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-}
-
 .square {
   aspect-ratio: 1/ 1;
   display: flex;
