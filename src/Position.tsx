@@ -13,8 +13,8 @@ function Position(props: PositionProps) {
   };
 
   return (
-    <div className='square'>
-      <div className='shape' style={wrapper}></div>
+    <div className='tile'>
+      <div className={'shape ' + shape + ' ' + colour}></div>
     </div>
   )
 }

@@ -13,7 +13,7 @@ function Board() {
     arr.push("hello")
   }
 
-  const renderedOutput = arr.map(row => <Position colour={'Red'} shape={'Triangle'}></Position>)
+  const renderedOutput = arr.map(row => <Position colour={'red'} shape={'square'}></Position>)
   const wrapper = {
     display: 'grid',
     gridTemplateColumns: '0fr '.repeat(MAX_BOARD_SIZE/2 - size) + '1fr '.repeat(size*2) + '0fr '.repeat(MAX_BOARD_SIZE/2 - size),

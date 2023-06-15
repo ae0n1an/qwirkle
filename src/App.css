@@ -14,22 +14,16 @@
   background-color: #D5DCF9;
 }
 
-.square {
+.tile {
   aspect-ratio: 1/ 1;
   display: flex;
   align-items: center;
   padding: 10%;
-  background-color: #A7B0CA;
+  background-color: #fff;
+  /*background-color: #A7B0CA;*/
   color: #fff;
   border-radius: 10%;
   margin: 2%;
-}
-
-.square img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center;
 }
 
 .shape {
@@ -38,4 +32,148 @@
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
+}
+
+.shape.square.red {
+  background-image: url(./images/SquareRed.png);
+}
+
+.shape.square.green {
+  background-image: url(./images/SquareGreen.png);
+}
+
+.shape.square.blue {
+  background-image: url(./images/SquareBlue.png);
+}
+
+.shape.square.yellow {
+  background-image: url(./images/SquareYellow.png);
+}
+
+.shape.square.purple {
+  background-image: url(./images/SquarePurple.png);
+}
+
+.shape.square.orange {
+  background-image: url(./images/SquareOrange.png);
+}
+
+.shape.circle.red {
+  background-image: url(./images/CircleRed.png);
+}
+
+.shape.circle.green {
+  background-image: url(./images/CircleGreen.png);
+}
+
+.shape.circle.blue {
+  background-image: url(./images/CircleBlue.png);
+}
+
+.shape.circle.yellow {
+  background-image: url(./images/CircleYellow.png);
+}
+
+.shape.circle.purple {
+  background-image: url(./images/CirclePurple.png);
+}
+
+.shape.circle.orange {
+  background-image: url(./images/CircleOrange.png);
+}
+
+.shape.triangle.red {
+  background-image: url(./images/TriangleRed.png);
+}
+
+.shape.triangle.green {
+  background-image: url(./images/TriangleGreen.png);
+}
+
+.shape.triangle.blue {
+  background-image: url(./images/TriangleBlue.png);
+}
+
+.shape.triangle.yellow {
+  background-image: url(./images/TriangleYellow.png);
+}
+
+.shape.triangle.purple {
+  background-image: url(./images/TrianglePurple.png);
+}
+
+.shape.triangle.orange {
+  background-image: url(./images/TriangleOrange.png);
+}
+
+.shape.diamond.red {
+  background-image: url(./images/DiamondRed.png);
+}
+
+.shape.diamond.green {
+  background-image: url(./images/DiamondGreen.png);
+}
+
+.shape.diamond.blue {
+  background-image: url(./images/DiamondBlue.png);
+}
+
+.shape.diamond.yellow {
+  background-image: url(./images/DiamondYellow.png);
+}
+
+.shape.diamond.purple {
+  background-image: url(./images/DiamondPurple.png);
+}
+
+.shape.diamond.orange {
+  background-image: url(./images/DiamondOrange.png);
+}
+
+.shape.six_point_star.red {
+  background-image: url(./images/SixPointStarRed.png);
+}
+
+.shape.six_point_star.green {
+  background-image: url(./images/SixPointStarGreen.png);
+}
+
+.shape.six_point_star.blue {
+  background-image: url(./images/SixPointStarBlue.png);
+}
+
+.shape.six_point_star.yellow {
+  background-image: url(./images/SixPointStarYellow.png);
+}
+
+.shape.six_point_star.purple {
+  background-image: url(./images/SixPointStarPurple.png);
+}
+
+.shape.six_point_star.orange {
+  background-image: url(./images/SixPointStarOrange.png);
+}
+
+.shape.four_point_star.red {
+  background-image: url(./images/FourPointStarRed.png);
+}
+
+.shape.four_point_star.green {
+  background-image: url(./images/FourPointStarGreen.png);
+}
+
+.shape.four_point_star.blue {
+  background-image: url(./images/FourPointStarBlue.png);
+}
+
+.shape.four_point_star.yellow {
+  background-image: url(./images/FourPointStarYellow.png);
+}
+
+.shape.four_point_star.purple {
+  background-image: url(./images/FourPointStarPurple.png);
+}
+
+.shape.four_point_star.orange {
+  background-image: url(./images/FourPointStarOrange.png);
 }
