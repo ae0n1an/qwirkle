@@ -8,12 +8,8 @@ type PositionProps = {
 function Position(props: PositionProps) {
   const { colour, shape } = props;
 
-  const wrapper = {
-    backgroundImage: 'url(./images/' + shape + colour + '.png)'
-  };
-
   return (
-    <div className='tile'>
+    <div className={'tile ' + shape}>
       <div className={'shape ' + shape + ' ' + colour}></div>
     </div>
   )

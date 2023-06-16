@@ -1,9 +1,9 @@
 .App {
   text-align: center;
+  background-color: #D5DCF9;
 }
 
 .center {
-  border: 5px solid;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -14,16 +14,24 @@
   background-color: #D5DCF9;
 }
 
+.holder {
+  display: 'grid';
+  grid-template-columns: '1fr 1fr 1fr 1fr 1fr 1fr';
+}
+
 .tile {
   aspect-ratio: 1/ 1;
   display: flex;
   align-items: center;
   padding: 10%;
-  background-color: #fff;
-  /*background-color: #A7B0CA;*/
+  background-color: #C8BFE7;
   color: #fff;
   border-radius: 10%;
   margin: 2%;
+}
+
+.tile.empty {
+  background-color: #fff;
 }
 
 .shape {
@@ -32,6 +40,10 @@
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
+}
+
+.shape.empty {
+  background-image: url(./images/Empty.png);
 }
 
 .shape.square.red {
