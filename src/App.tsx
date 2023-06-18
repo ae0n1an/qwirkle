@@ -1,27 +1,19 @@
-import React, { useState, useRef } from "react";
 import './App.css';
-import Board from './Board';
+import DisplayBoard from './DisplayBoard';
 import TokenHolder from "./TokenHolder";
-
-const INITIAL_BOARD_SIZE = 15; // the visible width n of the n*n board
+import { Game } from "./classes/game";
 
 
 function App() {
-  const board = []
-  
-  for (let i = 0; i < INITIAL_BOARD_SIZE; i++) {
-    let row = []
-    for (let j = 0; j < INITIAL_BOARD_SIZE; j++) {
-      row.push({colour: "none", shape:"empty"})
-    }
-    board.push(row)
-  }
+  const game = new Game()
+
+  console.log(game.getBoard().getTokenBoard())
 
   return (
     <div className="App">
       <div className="center">
-        <Board board={board}></Board>
-        <TokenHolder></TokenHolder>
+        <DisplayBoard board={game.getBoard().getTokenBoard()}></DisplayBoard>
+        <TokenHolder tokens={game.getActivePlayersTokens()}></TokenHolder>
       </div>
     </div>
   );

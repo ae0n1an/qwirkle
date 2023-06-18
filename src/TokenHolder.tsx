@@ -1,16 +1,31 @@
 import React from "react";
+import { Token } from "./classes/token";
+import Position from "./Position";
 
-type PositionProps = {
-  tokens: { colour: string; shape: string; }[][];
+type TokenHolderProps = {
+  tokens: Token[];
 }
 
-function TokenHolder() {
+function TokenHolder(props: TokenHolderProps) {
+  const { tokens } = props;
+
+  const renderedOutput = []
+
+  for (let i = 0; i < tokens.length; i++) { // add tokens to the token holder
+    renderedOutput.push(<Position colour={tokens[i].getColour()} shape={tokens[i].getShape()}></Position>)
+  }
+
+  const wrapper = {
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr',
+    transition: '300ms',
+    margin: '4%'
+  };
+
   return (
     <>
-    <div className= 'holder'>
-        <div className={'tile ' + shape}>
-        <div className={'shape ' + shape + ' ' + colour}></div>
-        </div>
+    <div style={wrapper}>
+        {renderedOutput}
     </div>
     </>
   );

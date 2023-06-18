@@ -5,4 +5,8 @@ export class Player {
     constructor(initial_tokens: Token[]) {
         this.tokens = initial_tokens
     }
+
+    public getTokens() {
+        return this.tokens
+    }
   }

@@ -7,4 +7,16 @@ export class Token {
       this.colour = colour
       this.shape = shape
     }
+
+    public isEmpty() {
+        return this.shape === "none";
+    }
+
+    public getColour() {
+        return this.colour
+    }
+
+    public getShape() {
+        return this.shape
+    }
   }
