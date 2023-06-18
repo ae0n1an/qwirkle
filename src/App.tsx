@@ -11,9 +11,13 @@ function App() {
 
   return (
     <div className="App">
-      <div className="center">
-        <DisplayBoard board={game.getBoard().getTokenBoard()}></DisplayBoard>
+      <div className="center mdl-grid">
+        <div className="mdl-cell mdl-cell--6-col">
+          <DisplayBoard board={game.getBoard().getTokenBoard()}></DisplayBoard>
+        </div>
+        <div className="mdl-cell mdl-cell--6-col">
         <TokenHolder tokens={game.getActivePlayersTokens()}></TokenHolder>
+        </div>
       </div>
     </div>
   );

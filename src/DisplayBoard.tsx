@@ -27,7 +27,8 @@ function DisplayBoard(props: PositionProps) {
     display: 'grid',
     gridTemplateColumns: '1fr '.repeat(board_width),
     gridTemplateRows: '1fr '.repeat(board_height),
-    transition: '300ms'
+    transition: '300ms',
+    padding: '2%'
   };
 
   return (
