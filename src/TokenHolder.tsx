@@ -1,6 +1,6 @@
 import React from "react";
 import { Token } from "./classes/token";
-import Position from "./Position";
+import DisplayPosition from "./DisplayPosition";
 
 type TokenHolderProps = {
   tokens: Token[];
@@ -12,7 +12,7 @@ function TokenHolder(props: TokenHolderProps) {
   const renderedOutput = []
 
   for (let i = 0; i < tokens.length; i++) { // add tokens to the token holder
-    renderedOutput.push(<Position colour={tokens[i].getColour()} shape={tokens[i].getShape()}></Position>)
+    renderedOutput.push(<DisplayPosition token={tokens[i]}></DisplayPosition>)
   }
 
   const wrapper = {

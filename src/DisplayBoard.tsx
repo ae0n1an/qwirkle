@@ -1,9 +1,9 @@
 import './App.css';
-import Position from "./Position";
-import { Token } from "./classes/token";
+import DisplayPosition from "./DisplayPosition";
+import { Position } from "./classes/Position";
 
 type PositionProps = {
-  board: Token[][];
+  board: Position[][];
 }
 
 function DisplayBoard(props: PositionProps) {
@@ -19,7 +19,7 @@ function DisplayBoard(props: PositionProps) {
 
   for (let i = 0; i < board_height; i++) { // add the visible board locations
     for (let j = 0; j < board_width; j++) { // add board in the middle
-      renderedOutput.push(<Position colour={board[i][j].getColour()} shape={board[i][j].getShape()}></Position>)
+      renderedOutput.push(<DisplayPosition token={board[i][j].getToken()}></DisplayPosition>)
     }
   }
 

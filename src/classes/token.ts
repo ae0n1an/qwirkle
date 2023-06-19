@@ -1,4 +1,3 @@
-
 export class Token {
     private colour: string
     private shape: string
@@ -6,10 +5,6 @@ export class Token {
     constructor(colour: string, shape: string) {
       this.colour = colour
       this.shape = shape
-    }
-
-    public isEmpty() {
-        return this.shape === "none";
     }
 
     public getColour() {
