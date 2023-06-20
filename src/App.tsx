@@ -7,8 +7,6 @@ import { Game } from "./classes/game";
 function App() {
   const game = new Game()
 
-  console.log(game.getBoard().getTokenBoard())
-
   return (
     <div className="App">
       <div className="center mdl-grid">

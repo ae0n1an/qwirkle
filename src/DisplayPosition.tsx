@@ -1,15 +1,14 @@
 import React from 'react'
-import {useEffect, useState} from 'react';
 import DisplayToken from './DisplayToken';
 import { Token } from './classes/token';
 
 type PositionProps = {
   token?: Token;
+  onClick: () => void;
 }
 
 function DisplayPosition(props: PositionProps) {
-  const [highlighted, setHighlighted] = useState(false);
-  const { token } = props;
+  const { token, onClick } = props;
 
   if (token === undefined) {
     return (
@@ -19,13 +18,8 @@ function DisplayPosition(props: PositionProps) {
     )
   } else {
 
-    const handleClick = () => {
-      token.notify()
-      setHighlighted(token.getHighlighted());
-    };
-
     return (
-      <div className={'tile' + (highlighted ? ' highlighted' : '')} onClick={handleClick}>
+      <div className={'tile' + (token.getHighlighted() ? ' highlighted' : '')} onClick={onClick}>
         <DisplayToken token = {token} ></DisplayToken>
       </div>
     )

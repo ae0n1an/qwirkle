@@ -19,7 +19,9 @@ function DisplayBoard(props: PositionProps) {
 
   for (let i = 0; i < board_height; i++) { // add the visible board locations
     for (let j = 0; j < board_width; j++) { // add board in the middle
-      renderedOutput.push(<DisplayPosition token={board[i][j].getToken()}></DisplayPosition>)
+      const handleClick = () => {
+      };
+      renderedOutput.push(<DisplayPosition token={board[i][j].getToken()}  onClick={handleClick}></DisplayPosition>)
     }
   }
 
