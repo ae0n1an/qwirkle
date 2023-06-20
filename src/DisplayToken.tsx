@@ -1,15 +1,15 @@
 import React from 'react'
+import { Token } from './classes/token';
 
 type TokenProps = {
-  colour: string;
-  shape: string;
+  token: Token;
 }
 
 function DisplayToken(props: TokenProps) {
-  const { colour, shape } = props;
+  const { token } = props;
 
   return (
-    <div className={'shape ' + shape + ' ' + colour}></div>
+    <div className={'shape ' + token.getShape() + ' ' + token.getColour()}></div>
   )
 }
 

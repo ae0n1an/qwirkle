@@ -16,7 +16,7 @@ function App() {
           <DisplayBoard board={game.getBoard().getTokenBoard()}></DisplayBoard>
         </div>
         <div className="mdl-cell mdl-cell--6-col">
-        <TokenHolder tokens={game.getActivePlayersTokens()}></TokenHolder>
+          <TokenHolder tokens={game.getActivePlayersTokens()}></TokenHolder>
         </div>
       </div>
     </div>

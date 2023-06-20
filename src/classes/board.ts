@@ -1,6 +1,6 @@
 import { Position } from "./Position";
 
-const INITIAL_BOARD_SIZE = 12;
+const INITIAL_BOARD_SIZE = 6;
 
 export class Board {
     private tokenBoard: Position[][]
