@@ -4,17 +4,17 @@ import DisplayPosition from "./DisplayPosition";
 import { Position } from "./classes/position";
 
 type PositionProps = {
-  board: Position[][];
+  board: Position[][][];
 }
 
 function DisplayBoard(props: PositionProps) {
   const { board } = props;
   const [highlighted, setHighlighted] = useState([-1]);
-  const board_height = board.length
+  let board_height = board[0].length
 
   let board_width = 0
   if (board_height !== 0) { 
-    board_width = board[0].length
+    board_width = board[0][0].length
   }
 
   const renderedOutput = []
@@ -22,10 +22,10 @@ function DisplayBoard(props: PositionProps) {
   for (let i = 0; i < board_height; i++) { // add the visible board locations
     for (let j = 0; j < board_width; j++) { // add board in the middle
       const handleClick = () => {
-        board[i][j].notify()
-        setHighlighted(board[i][j].getHighlighted()? [i, j] : [-1]);
+        board[0][i][j].notify()
+        setHighlighted(board[0][i][j].getHighlighted()? [i, j] : [-1]);
       };
-      renderedOutput.push(<DisplayPosition position={board[i][j]} highlighted={board[i][j].getHighlighted()} onClick={handleClick}></DisplayPosition>)
+      renderedOutput.push(<DisplayPosition position={board[0][i][j]} highlighted={board[0][i][j].getHighlighted()} onClick={handleClick}></DisplayPosition>)
     }
   }
 
