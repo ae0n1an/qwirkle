@@ -21,7 +21,6 @@ function TokenHolder(props: TokenHolderProps) {
       tokens[i].notify()
       setHighlighted(tokens[i].getHighlighted()? i : -1);
     };
-    console.log(highlighted)
     renderedOutput.push(<DisplayPosition position={position} highlighted={tokens[i].getHighlighted()} onClick={handleClick}></DisplayPosition>)
   }
 

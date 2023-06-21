@@ -19,6 +19,7 @@ export class Board implements Observer{
             }
             this.tokenBoard.push(row)
         }
+        this.addNeighbours()
         this.selectedPosition = undefined
     }
 
@@ -32,6 +33,25 @@ export class Board implements Observer{
             }
             this.selectedPosition = subject
             this.selectedPosition.toggleHighlight()
+        }
+    }
+
+    private addNeighbours() {
+        for (let i = 0; i < INITIAL_BOARD_SIZE; i++) {
+            for (let j = 0; j < INITIAL_BOARD_SIZE; j++) {
+                if (i-1 >= 0) {
+                    this.tokenBoard[i][j].addNeighbour(this.tokenBoard[i-1][j])
+                }
+                if (i+1 < INITIAL_BOARD_SIZE) {
+                    this.tokenBoard[i][j].addNeighbour(this.tokenBoard[i+1][j])
+                }
+                if (j-1 >= 0) {
+                    this.tokenBoard[i][j].addNeighbour(this.tokenBoard[i][j-1])
+                }
+                if (j+1 < INITIAL_BOARD_SIZE) {
+                    this.tokenBoard[i][j].addNeighbour(this.tokenBoard[i][j+1])
+                }
+            }
         }
     }
 

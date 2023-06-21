@@ -25,7 +25,6 @@ function DisplayBoard(props: PositionProps) {
         board[i][j].notify()
         setHighlighted(board[i][j].getHighlighted()? [i, j] : [-1]);
       };
-      console.log(highlighted)
       renderedOutput.push(<DisplayPosition position={board[i][j]} highlighted={board[i][j].getHighlighted()} onClick={handleClick}></DisplayPosition>)
     }
   }

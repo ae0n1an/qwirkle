@@ -3,10 +3,10 @@ import { Subject } from "./observer/subject";
 import { Token } from "./token";
 
 export class Position implements Subject {
-    private token?: Token
-    private neighbours: Position[]
-    private observers: Observer[];
+    private token?: Token;
+    private neighbours: Position[];
     private highlighted: boolean;
+    public observers: Observer[];
 
     constructor() {
       this.token = undefined
@@ -15,23 +15,8 @@ export class Position implements Subject {
       this.highlighted = false
     }
 
-    attach(observer: Observer): void {
-      this.observers.push(observer)
-    }
-
-    detach(observer: Observer): void {
-      const observerIndex = this.observers.indexOf(observer);
-      if (observerIndex === -1) {
-          return console.log('Subject: Nonexistent observer.');
-      }
-
-      this.observers.splice(observerIndex, 1);
-    }
-
-    notify(): void {
-      for (const observer of this.observers) {
-        observer.update(this);
-      }
+    public addNeighbour(neighbour: Position) {
+      this.neighbours.push(neighbour)
     }
 
     public toggleHighlight() {
@@ -48,5 +33,26 @@ export class Position implements Subject {
 
     public getHighlighted() {
       return this.highlighted
-  }
-  }
+    }
+
+    // Attach an observer to the subject.
+    attach(observer: Observer): void {
+      this.observers.push(observer)
+    }
+
+    // Detach an observer from the subject.
+    detach(observer: Observer): void {
+      const observerIndex = this.observers.indexOf(observer);
+      if (observerIndex === -1) {
+          return console.log('Subject: Nonexistent observer.');
+      }
+      this.observers.splice(observerIndex, 1);
+    }
+
+    // Notify all observers about an event.
+    notify(): void {
+      for (const observer of this.observers) {
+          observer.update(this);
+      }
+    }
+}
