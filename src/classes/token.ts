@@ -25,11 +25,9 @@ export class Token implements Subject{
       }
 
       this.observers.splice(observerIndex, 1);
-      console.log('Subject: Detached an observer.');
     }
 
     notify(): void {
-      console.log('Subject: Notifying observers...');
       for (const observer of this.observers) {
         observer.update(this);
       }
