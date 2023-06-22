@@ -3,25 +3,34 @@ import {useEffect, useState} from 'react';
 import { Token } from "./classes/token";
 import { Position } from "./classes/position";
 import DisplayPosition from "./DisplayPosition";
+import { Player } from "./classes/player";
+import { Board } from "./classes/board";
+import { Game } from "./classes/game";
 
 type TokenHolderProps = {
-  tokens: Token[];
+  player: Player;
+  setBoard: React.Dispatch<React.SetStateAction<{board: Board;}>>
+  setPlayer: React.Dispatch<React.SetStateAction<{player: Player;}>>
+  game: Game
 }
 
 function TokenHolder(props: TokenHolderProps) {
-  const [highlighted, setHighlighted] = useState(-1);
-  const { tokens } = props;
+  const { player, setBoard, setPlayer, game } = props;
+  const tokens = player.getTokens()
 
-  const renderedOutput = []
+  const renderedOutput: JSX.Element[] = []
+
+  tokens.forEach((token) => {
+    const position = new Position()
+    position.placeToken(token)
+    const handleClick = () => {
+      token.notify();
+    };
+    renderedOutput.push(<DisplayPosition position={position} highlighted={token === player.getSelectedToken()} setBoard={setBoard} setPlayer={setPlayer} game = {game} onClick = {handleClick}></DisplayPosition>)
+  });
 
   for (let i = 0; i < tokens.length; i++) { // add tokens to the token holder
-    const position = new Position()
-    position.placeToken(tokens[i])
-    const handleClick = () => {
-      tokens[i].notify()
-      setHighlighted(tokens[i].getHighlighted()? i : -1);
-    };
-    renderedOutput.push(<DisplayPosition position={position} highlighted={tokens[i].getHighlighted()} onClick={handleClick}></DisplayPosition>)
+    
   }
 
   const wrapper = {

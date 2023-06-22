@@ -2,32 +2,37 @@ import './App.css';
 import {useEffect, useState} from 'react';
 import DisplayPosition from "./DisplayPosition";
 import { Position } from "./classes/position";
+import { Board } from './classes/board';
+import { Player } from './classes/player';
+import { Game } from './classes/game';
 
 type PositionProps = {
-  board: Position[][][];
+  board: Board;
+  setBoard: React.Dispatch<React.SetStateAction<{board: Board;}>>;
+  setPlayer: React.Dispatch<React.SetStateAction<{player: Player;}>>;
+  game: Game;
 }
 
 function DisplayBoard(props: PositionProps) {
-  const { board } = props;
-  const [highlighted, setHighlighted] = useState([-1]);
-  let board_height = board[0].length
+  const { board, setBoard, setPlayer, game } = props;
+  const postion_board = board.getTokenBoard()
+  let board_height = postion_board[0].length
 
   let board_width = 0
   if (board_height !== 0) { 
-    board_width = board[0][0].length
+    board_width = postion_board[0][0].length
   }
 
-  const renderedOutput = []
+  const renderedOutput: JSX.Element[] = []
 
-  for (let i = 0; i < board_height; i++) { // add the visible board locations
-    for (let j = 0; j < board_width; j++) { // add board in the middle
+  postion_board[0].forEach((row) => {
+    row.forEach((pos) => {
       const handleClick = () => {
-        board[0][i][j].notify()
-        setHighlighted(board[0][i][j].getHighlighted()? [i, j] : [-1]);
+        pos.notify();
       };
-      renderedOutput.push(<DisplayPosition position={board[0][i][j]} highlighted={board[0][i][j].getHighlighted()} onClick={handleClick}></DisplayPosition>)
-    }
-  }
+      renderedOutput.push(<DisplayPosition position={pos} highlighted={pos === board.getSelectedPosition()} setBoard={setBoard} setPlayer={setPlayer} game = {game} onClick = {handleClick}></DisplayPosition>)
+    });
+  });
 
   const wrapper = {
     display: 'grid',
@@ -36,7 +41,7 @@ function DisplayBoard(props: PositionProps) {
     transition: '300ms',
     padding: '2%'
   };
-
+  
   return (
     <>
       <div style={wrapper}>

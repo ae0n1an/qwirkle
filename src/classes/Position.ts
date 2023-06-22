@@ -5,22 +5,16 @@ import { Token } from "./token";
 export class Position implements Subject {
     private token?: Token;
     private neighbours: Position[];
-    private highlighted: boolean;
     public observers: Observer[];
 
     constructor() {
       this.token = undefined
       this.neighbours = []
       this.observers = []
-      this.highlighted = false
     }
 
     public addNeighbour(neighbour: Position) {
       this.neighbours.push(neighbour)
-    }
-
-    public toggleHighlight() {
-      this.highlighted = !this.highlighted
     }
 
     public getToken() {
@@ -29,10 +23,6 @@ export class Position implements Subject {
 
     public placeToken(token: Token) {
       this.token = token
-    }
-
-    public getHighlighted() {
-      return this.highlighted
     }
 
     // Attach an observer to the subject.

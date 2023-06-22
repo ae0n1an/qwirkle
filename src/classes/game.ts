@@ -1,8 +1,8 @@
 import { Board } from "./board";
-import { Observer } from "./observer/observer";
 import { Player } from "./player";
 import { Token } from "./token";
 import { Subject } from "./observer/subject";
+import { PlaceAction } from "./placeAction";
 
 const COLORS = ["red", "blue", "green", "orange", "purple", "yellow"];
 const SHAPES = ["square", "circle", "triangle", "diamond", "four_point_star", "six_point_star"];
@@ -10,14 +10,14 @@ const NUMBER_OF_EACH_TOKEN = 3;
 const NUMBER_OF_PLAYERS = 2;
 const NUMBER_OF_TOKENS_PER_PLAYER = 6;
 
-export class Game implements Observer {
+export class Game{
     private board: Board;
     private active_player: Player;
     private players: Player[];
     private unplaced_tokens: Token[];
 
     constructor() {
-        this.board = new Board(this);
+        this.board = new Board();
         this.unplaced_tokens = [];
         this.generate_tokens();
         this.players = [];
@@ -60,7 +60,7 @@ export class Game implements Observer {
             for (let j = 0; j < NUMBER_OF_TOKENS_PER_PLAYER; j++) {
                 tokens.push(this.unplaced_tokens.pop()!)
             }
-            this.players.push(new Player(tokens, this))
+            this.players.push(new Player(tokens))
         }
     }
 
@@ -68,15 +68,23 @@ export class Game implements Observer {
         return this.board
     }
 
-    public getActivePlayersTokens() {
-        return this.active_player.getTokens()
+    public getActivePlayer() {
+        return this.active_player
     }
 
-    update(subject: Subject): void {
+    public update(): void {
         let selectedPosition = this.board.getSelectedPosition()
         let selectedToken = this.active_player.getSelectedToken()
         if (selectedPosition !== undefined && selectedToken !== undefined) {
-
+            let action = new PlaceAction(selectedToken, selectedPosition)
+            action.execute()
+            console.log(action)
+            this.removeSelected()
         }
+    }
+
+    private removeSelected() {
+        this.active_player.removeSelectedToken()
+        this.board.removeSelectedPosition()
     }
 }

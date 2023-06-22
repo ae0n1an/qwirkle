@@ -3,19 +3,13 @@ import { Observer } from "./observer/observer";
 
 export class Token implements Subject{
     private colour: string
-    private shape: string
-    private highlighted: boolean;
+    private shape: string;
     public observers: Observer[];
 
     constructor(colour: string, shape: string) {
       this.colour = colour
       this.shape = shape
-      this.highlighted = false
       this.observers = []
-    }
-
-    public toggleHighlight() {
-      this.highlighted = !this.highlighted
     }
 
     public getColour() {
@@ -24,10 +18,6 @@ export class Token implements Subject{
 
     public getShape() {
         return this.shape
-    }
-
-    public getHighlighted() {
-        return this.highlighted
     }
 
     // Attach an observer to the subject.
