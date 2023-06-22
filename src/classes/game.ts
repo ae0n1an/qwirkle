@@ -75,7 +75,9 @@ export class Game{
     public update(): void {
         let selectedPosition = this.board.getSelectedPosition()
         let selectedToken = this.active_player.getSelectedToken()
-        if (selectedPosition !== undefined && selectedToken !== undefined) {
+        if (selectedPosition !== undefined && selectedPosition.getToken() !== undefined) {
+            this.board.removeSelectedPosition()
+        } else if (selectedPosition !== undefined && selectedToken !== undefined) {
             let action = new PlaceAction(selectedToken, selectedPosition)
             action.execute()
             console.log(action)
