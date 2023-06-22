@@ -1,6 +1,8 @@
 import { Board } from "./board";
+import { Observer } from "./observer/observer";
 import { Player } from "./player";
 import { Token } from "./token";
+import { Subject } from "./observer/subject";
 
 const COLORS = ["red", "blue", "green", "orange", "purple", "yellow"];
 const SHAPES = ["square", "circle", "triangle", "diamond", "four_point_star", "six_point_star"];
@@ -8,14 +10,14 @@ const NUMBER_OF_EACH_TOKEN = 3;
 const NUMBER_OF_PLAYERS = 2;
 const NUMBER_OF_TOKENS_PER_PLAYER = 6;
 
-export class Game {
+export class Game implements Observer {
     private board: Board;
     private active_player: Player;
     private players: Player[];
     private unplaced_tokens: Token[];
 
     constructor() {
-        this.board = new Board();
+        this.board = new Board(this);
         this.unplaced_tokens = [];
         this.generate_tokens();
         this.players = [];
@@ -58,7 +60,7 @@ export class Game {
             for (let j = 0; j < NUMBER_OF_TOKENS_PER_PLAYER; j++) {
                 tokens.push(this.unplaced_tokens.pop()!)
             }
-            this.players.push(new Player(tokens))
+            this.players.push(new Player(tokens, this))
         }
     }
 
@@ -68,5 +70,13 @@ export class Game {
 
     public getActivePlayersTokens() {
         return this.active_player.getTokens()
+    }
+
+    update(subject: Subject): void {
+        let selectedPosition = this.board.getSelectedPosition()
+        let selectedToken = this.active_player.getSelectedToken()
+        if (selectedPosition !== undefined && selectedToken !== undefined) {
+
+        }
     }
 }
