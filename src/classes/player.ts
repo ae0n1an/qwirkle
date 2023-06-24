@@ -21,6 +21,10 @@ export class Player implements Observer{
         }
     }
 
+    public insertToken(index: number, token: Token) {
+        this.tokens.splice(index, 0, token);
+    }
+
     public getTokens() {
         return this.tokens
     }
@@ -29,14 +33,17 @@ export class Player implements Observer{
         return this.selected_token
     }
 
-    public removeSelectedToken() {
+    public removeSelectedToken() : number {
         if (this.selected_token !== undefined) {
             const tokenIndex = this.tokens.indexOf(this.selected_token);
             if (tokenIndex === -1) {
-                return console.log('Subject: Nonexistent token.');
+                console.log('Subject: Nonexistent token.')
+                return -1;
             }
             this.tokens.splice(tokenIndex, 1);
             this.selected_token = undefined
+            return tokenIndex
         }
+        return -1;
     }
   }

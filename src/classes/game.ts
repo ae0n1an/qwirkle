@@ -15,6 +15,7 @@ export class Game{
     private active_player: Player;
     private players: Player[];
     private unplaced_tokens: Token[];
+    private action_stack: PlaceAction[];
 
     constructor() {
         this.board = new Board();
@@ -23,6 +24,7 @@ export class Game{
         this.players = [];
         this.generate_players();
         this.active_player = this.players[0];
+        this.action_stack = [];
     }
 
     private generate_tokens() {
@@ -64,6 +66,20 @@ export class Game{
         }
     }
 
+    public undoMove() {
+        if (this.action_stack.length > 0) {
+            let previous_action = this.action_stack.pop()
+            previous_action?.revert()
+        }
+    }
+
+    public undoAllMoves() {
+        while (this.action_stack.length > 0) {
+            let previous_action = this.action_stack.pop()
+            previous_action?.revert()
+        }
+    }
+
     public getBoard() {
         return this.board
     }
@@ -78,15 +94,15 @@ export class Game{
         if (selectedPosition !== undefined && selectedPosition.getToken() !== undefined) {
             this.board.removeSelectedPosition()
         } else if (selectedPosition !== undefined && selectedToken !== undefined) {
-            let action = new PlaceAction(selectedToken, selectedPosition)
-            action.execute()
-            console.log(action)
-            this.removeSelected()
+            let token_index = this.removeSelected()
+            let placeAction = new PlaceAction(this.active_player, selectedToken, selectedPosition, token_index)
+            this.action_stack.push(placeAction)
+            placeAction.execute()
         }
     }
 
-    private removeSelected() {
-        this.active_player.removeSelectedToken()
+    private removeSelected() : number { // returns the index of the previous token in the player
         this.board.removeSelectedPosition()
+        return this.active_player.removeSelectedToken()
     }
 }

@@ -25,6 +25,10 @@ export class Position implements Subject {
       this.token = token
     }
 
+    public removeToken() {
+      this.token = undefined
+    }
+
     // Attach an observer to the subject.
     attach(observer: Observer): void {
       this.observers.push(observer)
