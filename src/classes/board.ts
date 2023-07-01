@@ -79,7 +79,7 @@ export class Board implements Observer{
         let prevToken = undefined
         let shape = undefined
         let colour = undefined
-        let current_tokens: [string, string][] = []
+        let current_tokens: string[] = []
         let placed_tokens = 0
         let valid_shape = true
         let valid_colour = true
@@ -93,7 +93,7 @@ export class Board implements Observer{
                     colour = currentToken.getColour()
                     valid_shape = true
                     valid_colour = true
-                    current_tokens = [[currentToken.getShape(), currentToken.getColour()]]
+                    current_tokens = [currentToken.getShape() + currentToken.getColour()]
                     if (this.updatedPositions.includes(this.tokenBoard[0][j][i])) {
                         placed_tokens = 1
                     } else {
@@ -109,10 +109,10 @@ export class Board implements Observer{
                     if (valid_colour && currentToken.getColour() !== colour) {
                         valid_colour = false
                     }
-                    if (current_tokens.includes([currentToken.getShape(), currentToken.getColour()]) || (!valid_colour && !valid_shape)) {
+                    if (current_tokens.includes(currentToken.getShape() + currentToken.getColour()) || (!valid_colour && !valid_shape)) {
                         return [false, false]
                     }
-                    current_tokens.push([currentToken.getShape(), currentToken.getColour()])
+                    current_tokens.push(currentToken.getShape() + currentToken.getColour())
                 }
             } else if (placed_tokens === this.updatedPositions.length) {
                 contains_all_placed_tokens = true
@@ -201,14 +201,14 @@ export class Board implements Observer{
             for (let j = 0; j < this.tokenBoard[0].length; j++) {
                 if (this.tokenBoard[0][i][j].getToken() !== undefined) {
                     left = Math.min(left, j)
-                    right = Math.max(right, j)
+                    right = Math.max(right, j + 1)
                     top = Math.min(top, i)
-                    bottom = Math.max(bottom, i)
+                    bottom = Math.max(bottom, i + 1)
                 } 
             }
         }
         let current_size = this.tokenBoard[0].length
-        let size_increase =  5 - Math.min(left, top, current_size- right, current_size - top)
+        let size_increase =  5 - Math.min(left, top, current_size - right, current_size - bottom)
         for (let i = 0; i < size_increase; i++) {
             this.growBoard()
         }
