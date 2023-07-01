@@ -81,23 +81,20 @@ export class Game{
     }
 
     public reshuffleHand() {
-        this.board.growBoard()
         this.undoAllMoves()
-        this.removeSelected()
         let current_tokens = this.active_player.getTokens()
         while (current_tokens.length !== 0) { // remove each token and randomly place back in the unplaced_tokens pile
             let removed_token = current_tokens.pop()!
             this.addTokenBack(removed_token)
             removed_token.detach(this.active_player) // remove the player from observing the token
         }
-        for (let j = 0; j < NUMBER_OF_TOKENS_PER_PLAYER || this.unplaced_tokens.length === 0; j++) {
-            this.active_player.addToken(this.unplaced_tokens.pop()!) // take the tokens from the unplaced_tokens pile
-        }
+        this.nextPlayer()
     }
 
     public confirmTurn() {
         if (this.board.validateBoard()) {
             this.board.increaseBoard()
+            this.nextPlayer()
         } else {
             this.undoAllMoves()
         }
@@ -131,5 +128,16 @@ export class Game{
     private removeSelected() : number { // returns the index of the previous token in the player
         this.board.removeSelectedPosition()
         return this.active_player.removeSelectedToken()
+    }
+
+    private nextPlayer() {
+        this.removeSelected()
+        // add tokens to the player that just had their turn
+        for (let j = this.active_player.getNumberOfTokens(); j < NUMBER_OF_TOKENS_PER_PLAYER && this.unplaced_tokens.length !== 0; j++) {
+            this.active_player.addToken(this.unplaced_tokens.pop()!) // take the tokens from the unplaced_tokens pile
+        }
+        let next_player_index = (this.players.indexOf(this.active_player) + 1) % this.players.length;
+        this.active_player = this.players[next_player_index]
+        this.action_stack = []
     }
 }

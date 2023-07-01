@@ -13,6 +13,10 @@ export class Player implements Observer{
         this.selected_token = undefined
     }
 
+    public getNumberOfTokens(): number {
+        return this.tokens.length
+    }
+
     public addToken(token: Token) {
         this.tokens.push(token)
         token.attach(this)

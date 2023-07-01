@@ -53,10 +53,12 @@ export class Board implements Observer{
     public validateBoard() : boolean {
         let valid_row, valid_col
         let tiles_placed_continuously = false
+        if (this.updatedPositions.length === 0) {
+            return false
+        }
         for (let i = 0; i < this.tokenBoard[0].length; i++) {
             valid_row = this.validateRow(i)
             valid_col = this.validateColumn(i)
-            console.log(valid_row, valid_col, i)
             if (!valid_row[0] || !valid_col[0]) {
                 return false
             }
@@ -65,6 +67,7 @@ export class Board implements Observer{
             }
         }
         if (tiles_placed_continuously) {
+            this.clearUpdatedPositions()
             return true
         } else {
             return false
@@ -157,7 +160,6 @@ export class Board implements Observer{
                     if (valid_colour && currentToken.getColour() !== colour) {
                         valid_colour = false
                     }
-                    console.log(current_tokens, currentToken.getShape() + currentToken.getColour())
                     if (current_tokens.includes(currentToken.getShape() + currentToken.getColour()) || (!valid_colour && !valid_shape)) {
                         return [false, false]
                     }
@@ -205,7 +207,6 @@ export class Board implements Observer{
                 } 
             }
         }
-        console.log(left, right, top, bottom)
         let current_size = this.tokenBoard[0].length
         let size_increase =  5 - Math.min(left, top, current_size- right, current_size - top)
         for (let i = 0; i < size_increase; i++) {
