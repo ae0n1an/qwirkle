@@ -29,6 +29,18 @@ function App(props: AppProps) {
     setPlayer({player: game.getActivePlayer()})
   };
 
+  const shuffleHand = () => {
+    game.reshuffleHand()
+    setBoard({board: game.getBoard()})
+    setPlayer({player: game.getActivePlayer()})
+  };
+
+  const confirmMove = () => {
+    game.confirmTurn()
+    setBoard({board: game.getBoard()})
+    setPlayer({player: game.getActivePlayer()})
+  };
+
   return (
     <div className="App">
       <div className="center mdl-grid">
@@ -48,7 +60,7 @@ function App(props: AppProps) {
                   </button>
                 </div>
                 <div className="mdl-cell mdl-cell--3-col">
-                  <button className="mdl-button mdl-button--raised mdl-button--colored mdl-color--purple">
+                  <button className="mdl-button mdl-button--raised mdl-button--colored mdl-color--purple" onClick={() => shuffleHand()}>
                     <RefreshIcon/>
                   </button>
                 </div>
@@ -58,7 +70,7 @@ function App(props: AppProps) {
                   </button>
                 </div>
                 <div className="mdl-cell mdl-cell--3-col">
-                  <button className="mdl-button mdl-button--raised mdl-button--colored mdl-color--green">
+                  <button className="mdl-button mdl-button--raised mdl-button--colored mdl-color--green" onClick={() => confirmMove()}>
                     <DoneIcon/>
                   </button>
                 </div>

@@ -8,6 +8,7 @@ const INITIAL_BOARD_SIZE = 6;
 export class Board implements Observer{
     private tokenBoard: Position[][][]
     private selectedPosition?: Position
+    private updatedPositions: Position[]
 
     constructor() {
         this.tokenBoard = [[]]
@@ -22,6 +23,23 @@ export class Board implements Observer{
         }
         this.addNeighbours()
         this.selectedPosition = undefined
+        this.updatedPositions = []
+    }
+
+    public addUpdatedPosition(position: Position) {
+        this.updatedPositions.push(position)
+    }
+
+    public removeUpdatedPosition(position: Position) {
+        const positionIndex = this.updatedPositions.indexOf(position);
+        if (positionIndex === -1) {
+            return console.log('Subject: Nonexistent position.')
+        }
+        this.updatedPositions.splice(positionIndex, 1);
+    }
+
+    private clearUpdatedPositions() {
+        this.updatedPositions = []
     }
 
     update(subject: Position): void {
@@ -30,6 +48,130 @@ export class Board implements Observer{
         } else {
             this.selectedPosition = subject
         }
+    }
+
+    public validateBoard() : boolean {
+        let valid_row, valid_col
+        let tiles_placed_continuously = false
+        for (let i = 0; i < this.tokenBoard[0].length; i++) {
+            valid_row = this.validateRow(i)
+            valid_col = this.validateColumn(i)
+            console.log(valid_row, valid_col, i)
+            if (!valid_row[0] || !valid_col[0]) {
+                return false
+            }
+            if (valid_row[1] || valid_col[1]) {
+                tiles_placed_continuously = true
+            }
+        }
+        if (tiles_placed_continuously) {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    private validateColumn(i: number) : [boolean, boolean] {
+        let currentToken = undefined
+        let prevToken = undefined
+        let shape = undefined
+        let colour = undefined
+        let current_tokens: [string, string][] = []
+        let placed_tokens = 0
+        let valid_shape = true
+        let valid_colour = true
+        let contains_all_placed_tokens = false
+
+        for (let j = 0; j < this.tokenBoard[0].length; j++) {
+            currentToken = this.tokenBoard[0][j][i].getToken()
+            if (currentToken !== undefined) {
+                if (prevToken === undefined) {
+                    shape = currentToken.getShape()
+                    colour = currentToken.getColour()
+                    valid_shape = true
+                    valid_colour = true
+                    current_tokens = [[currentToken.getShape(), currentToken.getColour()]]
+                    if (this.updatedPositions.includes(this.tokenBoard[0][j][i])) {
+                        placed_tokens = 1
+                    } else {
+                        placed_tokens = 0
+                    }
+                } else {
+                    if (this.updatedPositions.includes(this.tokenBoard[0][j][i])) {
+                        placed_tokens += 1
+                    }
+                    if (valid_shape && currentToken.getShape() !== shape) {
+                        valid_shape = false
+                    }
+                    if (valid_colour && currentToken.getColour() !== colour) {
+                        valid_colour = false
+                    }
+                    if (current_tokens.includes([currentToken.getShape(), currentToken.getColour()]) || (!valid_colour && !valid_shape)) {
+                        return [false, false]
+                    }
+                    current_tokens.push([currentToken.getShape(), currentToken.getColour()])
+                }
+            } else if (placed_tokens === this.updatedPositions.length) {
+                contains_all_placed_tokens = true
+            }
+            prevToken = currentToken
+        }
+        if (placed_tokens === this.updatedPositions.length) {
+            contains_all_placed_tokens = true
+        }
+        return [true, contains_all_placed_tokens]
+    }
+
+    private validateRow(i: number) : [boolean, boolean] {
+        let currentToken = undefined
+        let prevToken = undefined
+        let shape = undefined
+        let colour = undefined
+        let current_tokens: string[] = []
+        let placed_tokens = 0
+        let valid_shape = true
+        let valid_colour = true
+        let contains_all_placed_tokens = false
+
+        for (let j = 0; j < this.tokenBoard[0].length; j++) {
+            currentToken = this.tokenBoard[0][i][j].getToken()
+            if (currentToken !== undefined) {
+                if (prevToken === undefined) {
+                    shape = currentToken.getShape()
+                    colour = currentToken.getColour()
+                    valid_shape = true
+                    valid_colour = true
+                    current_tokens = [currentToken.getShape() + currentToken.getColour()]
+                    if (this.updatedPositions.includes(this.tokenBoard[0][i][j])) {
+                        placed_tokens = 1
+                    } else {
+                        placed_tokens = 0
+                    }
+                } else {
+                    if (this.updatedPositions.includes(this.tokenBoard[0][i][j])) {
+                        placed_tokens += 1
+                    }
+                    if (valid_shape && currentToken.getShape() !== shape) {
+                        valid_shape = false
+                    }
+                    if (valid_colour && currentToken.getColour() !== colour) {
+                        valid_colour = false
+                    }
+                    console.log(current_tokens, currentToken.getShape() + currentToken.getColour())
+                    if (current_tokens.includes(currentToken.getShape() + currentToken.getColour()) || (!valid_colour && !valid_shape)) {
+                        return [false, false]
+                    }
+                    current_tokens.push(currentToken.getShape() + currentToken.getColour())
+                }
+            } else if (placed_tokens === this.updatedPositions.length) {
+                contains_all_placed_tokens = true
+            }
+            prevToken = currentToken
+        }
+        if (placed_tokens === this.updatedPositions.length) {
+            contains_all_placed_tokens = true
+        }
+        return [true, contains_all_placed_tokens]
     }
 
     private addNeighbours() {
@@ -51,7 +193,7 @@ export class Board implements Observer{
         }
     }
 
-    private growBoard() {
+    public growBoard() {
         // add left and right columns to the board updating their neighbours
         for (let i = 0; i < this.tokenBoard[0].length; i++) {
             this.tokenBoard[0][i] = [new Position(), ...this.tokenBoard[0][i], new Position()]

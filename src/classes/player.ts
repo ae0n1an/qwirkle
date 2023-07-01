@@ -13,6 +13,11 @@ export class Player implements Observer{
         this.selected_token = undefined
     }
 
+    public addToken(token: Token) {
+        this.tokens.push(token)
+        token.attach(this)
+    }
+
     update(subject: Token): void {
         if (this.selected_token === subject) {
             this.selected_token = undefined

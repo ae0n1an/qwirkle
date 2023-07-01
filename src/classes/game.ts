@@ -80,6 +80,33 @@ export class Game{
         }
     }
 
+    public reshuffleHand() {
+        this.board.growBoard()
+        this.undoAllMoves()
+        this.removeSelected()
+        let current_tokens = this.active_player.getTokens()
+        while (current_tokens.length != 0) { // remove each token and randomly place back in the unplaced_tokens pile
+            let removed_token = current_tokens.pop()!
+            this.addTokenBack(removed_token)
+            removed_token.detach(this.active_player) // remove the player from observing the token
+        }
+        for (let j = 0; j < NUMBER_OF_TOKENS_PER_PLAYER || this.unplaced_tokens.length == 0; j++) {
+            this.active_player.addToken(this.unplaced_tokens.pop()!) // take the tokens from the unplaced_tokens pile
+        }
+    }
+
+    public confirmTurn() {
+        if (this.board.validateBoard()) {
+            console.log('valid')
+        } else {
+            this.undoAllMoves()
+        }
+    }
+
+    private addTokenBack(token: Token) {
+        this.unplaced_tokens.splice(Math.floor(Math.random()*this.unplaced_tokens.length), 0, token);
+    }
+
     public getBoard() {
         return this.board
     }
@@ -95,7 +122,7 @@ export class Game{
             this.board.removeSelectedPosition()
         } else if (selectedPosition !== undefined && selectedToken !== undefined) {
             let token_index = this.removeSelected()
-            let placeAction = new PlaceAction(this.active_player, selectedToken, selectedPosition, token_index)
+            let placeAction = new PlaceAction(this.active_player, selectedToken, selectedPosition, token_index, this.board)
             this.action_stack.push(placeAction)
             placeAction.execute()
         }
