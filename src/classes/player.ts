@@ -1,16 +1,22 @@
 import { Token } from "./token"
 import { Observer } from "./observer/observer"
 
-export class Player implements Observer{
+export class Player implements Observer {
+    private name: string
     private tokens: Token[]
     private selected_token?: Token
 
-    constructor(initial_tokens: Token[]) {
+    constructor(initial_tokens: Token[], name: string) {
+        this.name = name
         this.tokens = initial_tokens
         for (const token of this.tokens) {
             token.attach(this)
         }
         this.selected_token = undefined
+    }
+
+    public getName(): string {
+        return this.name
     }
 
     public getNumberOfTokens(): number {

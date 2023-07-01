@@ -16,6 +16,7 @@ export class Game{
     private players: Player[];
     private unplaced_tokens: Token[];
     private action_stack: PlaceAction[];
+    private status_display: string;
 
     constructor() {
         this.board = new Board();
@@ -25,6 +26,11 @@ export class Game{
         this.generate_players();
         this.active_player = this.players[0];
         this.action_stack = [];
+        this.status_display = this.active_player.getName() + "'s turn";
+    }
+
+    public getStatus() : string{
+        return this.status_display
     }
 
     private generate_tokens() {
@@ -62,7 +68,7 @@ export class Game{
             for (let j = 0; j < NUMBER_OF_TOKENS_PER_PLAYER; j++) {
                 tokens.push(this.unplaced_tokens.pop()!)
             }
-            this.players.push(new Player(tokens))
+            this.players.push(new Player(tokens, "player " + (i+1).toString()))
         }
     }
 
@@ -139,5 +145,6 @@ export class Game{
         let next_player_index = (this.players.indexOf(this.active_player) + 1) % this.players.length;
         this.active_player = this.players[next_player_index]
         this.action_stack = []
+        this.status_display = this.active_player.getName() + "'s turn";
     }
 }
