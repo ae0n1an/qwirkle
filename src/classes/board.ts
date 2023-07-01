@@ -193,6 +193,26 @@ export class Board implements Observer{
         }
     }
 
+    public increaseBoard() {
+        let left = Infinity, right = 0, top = Infinity, bottom = 0 
+        for (let i = 0; i < this.tokenBoard[0].length; i++) {
+            for (let j = 0; j < this.tokenBoard[0].length; j++) {
+                if (this.tokenBoard[0][i][j].getToken() !== undefined) {
+                    left = Math.min(left, j)
+                    right = Math.max(right, j)
+                    top = Math.min(top, i)
+                    bottom = Math.max(bottom, i)
+                } 
+            }
+        }
+        console.log(left, right, top, bottom)
+        let current_size = this.tokenBoard[0].length
+        let size_increase =  5 - Math.min(left, top, current_size- right, current_size - top)
+        for (let i = 0; i < size_increase; i++) {
+            this.growBoard()
+        }
+    }
+
     public growBoard() {
         // add left and right columns to the board updating their neighbours
         for (let i = 0; i < this.tokenBoard[0].length; i++) {
