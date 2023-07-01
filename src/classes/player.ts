@@ -5,6 +5,7 @@ export class Player implements Observer {
     private name: string
     private tokens: Token[]
     private selected_token?: Token
+    private score: number
 
     constructor(initial_tokens: Token[], name: string) {
         this.name = name
@@ -13,6 +14,7 @@ export class Player implements Observer {
             token.attach(this)
         }
         this.selected_token = undefined
+        this.score = 0
     }
 
     public getName(): string {

@@ -29,6 +29,14 @@ export class Game{
         this.status_display = this.active_player.getName() + "'s turn";
     }
 
+    public getPlayers() {
+        return this.players
+    }
+
+    public getRemainingTokenCount(): number {
+        return this.unplaced_tokens.length
+    }
+
     public getStatus() : string{
         return this.status_display
     }
@@ -68,7 +76,7 @@ export class Game{
             for (let j = 0; j < NUMBER_OF_TOKENS_PER_PLAYER; j++) {
                 tokens.push(this.unplaced_tokens.pop()!)
             }
-            this.players.push(new Player(tokens, "player " + (i+1).toString()))
+            this.players.push(new Player(tokens, "Player " + (i+1).toString()))
         }
     }
 

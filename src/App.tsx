@@ -7,6 +7,8 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import DoneIcon from '@mui/icons-material/Done';
 import UndoIcon from '@mui/icons-material/Undo';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import TokenCountDisplay from './TokenCountDisplay';
+import PlayersDisplay from './PlayersDisplay';
 
 type AppProps = {
   game: Game;
@@ -22,14 +24,12 @@ function App(props: AppProps) {
     game.undoMove()
     setBoard({board: game.getBoard()})
     setPlayer({player: game.getActivePlayer()})
-    setStatus({status: game.getStatus()})
   };
 
   const undoAllClicked = () => {
     game.undoAllMoves()
     setBoard({board: game.getBoard()})
     setPlayer({player: game.getActivePlayer()})
-    setStatus({status: game.getStatus()})
   };
 
   const shuffleHand = () => {
@@ -81,6 +81,16 @@ function App(props: AppProps) {
                   <button className="mdl-button mdl-button--raised mdl-button--colored mdl-color--green" onClick={() => confirmMove()}>
                     <DoneIcon/>
                   </button>
+                </div>
+              </div>
+            </div>
+            <div className="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+              <div className="mdl-grid">
+                <div className="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
+                  <PlayersDisplay players = {game.getPlayers()}/>
+                </div>
+                <div className="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
+                  <TokenCountDisplay tokenCount = {game.getRemainingTokenCount()}/>
                 </div>
               </div>
             </div>
