@@ -7,7 +7,7 @@ import { PlaceAction } from "./placeAction";
 const COLORS = ["red", "blue", "green", "orange", "purple", "yellow"];
 const SHAPES = ["square", "circle", "triangle", "diamond", "four_point_star", "six_point_star"];
 const NUMBER_OF_EACH_TOKEN = 3;
-const NUMBER_OF_PLAYERS = 2;
+const NUMBER_OF_PLAYERS = 3;
 const NUMBER_OF_TOKENS_PER_PLAYER = 6;
 
 export class Game{

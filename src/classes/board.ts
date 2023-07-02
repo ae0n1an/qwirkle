@@ -9,6 +9,7 @@ export class Board implements Observer{
     private tokenBoard: Position[][][]
     private selectedPosition?: Position
     private updatedPositions: Position[]
+    private boardEmpty: boolean
 
     constructor() {
         this.tokenBoard = [[]]
@@ -24,6 +25,7 @@ export class Board implements Observer{
         this.addNeighbours()
         this.selectedPosition = undefined
         this.updatedPositions = []
+        this.boardEmpty = true
     }
 
     public addUpdatedPosition(position: Position) {
@@ -53,6 +55,7 @@ export class Board implements Observer{
     public validateBoard() : boolean {
         let valid_row, valid_col
         let tiles_placed_continuously = false
+        let tiles_connected = this.boardEmpty // if the board is empty then if the play is valid it will be connected
         if (this.updatedPositions.length === 0) {
             return false
         }
@@ -62,28 +65,34 @@ export class Board implements Observer{
             if (!valid_row[0] || !valid_col[0]) {
                 return false
             }
-            if (valid_row[1] || valid_col[1]) {
+            if (valid_row[1] === this.updatedPositions.length || valid_col[1] === this.updatedPositions.length) {
                 tiles_placed_continuously = true
             }
+            if (valid_row[2] || valid_col[2]) {
+                tiles_connected = true
+            }
         }
-        if (tiles_placed_continuously) {
+        if (tiles_placed_continuously && tiles_connected) {
             this.clearUpdatedPositions()
+            this.boardEmpty = false 
             return true
         } else {
             return false
         }
     }
 
-    private validateColumn(i: number) : [boolean, boolean] {
+    private validateColumn(i: number) : [boolean, number, boolean] {
         let currentToken = undefined
         let prevToken = undefined
         let shape = undefined
         let colour = undefined
         let current_tokens: string[] = []
+        let token_sequence = 0
         let placed_tokens = 0
+        let connected = false
         let valid_shape = true
         let valid_colour = true
-        let contains_all_placed_tokens = false
+        let placed_tokens_count = 0
 
         for (let j = 0; j < this.tokenBoard[0].length; j++) {
             currentToken = this.tokenBoard[0][j][i].getToken()
@@ -99,7 +108,9 @@ export class Board implements Observer{
                     } else {
                         placed_tokens = 0
                     }
+                    token_sequence = 1
                 } else {
+                    token_sequence += 1
                     if (this.updatedPositions.includes(this.tokenBoard[0][j][i])) {
                         placed_tokens += 1
                     }
@@ -110,31 +121,34 @@ export class Board implements Observer{
                         valid_colour = false
                     }
                     if (current_tokens.includes(currentToken.getShape() + currentToken.getColour()) || (!valid_colour && !valid_shape)) {
-                        return [false, false]
+                        return [false, -1, false]
                     }
                     current_tokens.push(currentToken.getShape() + currentToken.getColour())
                 }
-            } else if (placed_tokens === this.updatedPositions.length) {
-                contains_all_placed_tokens = true
+            } else {
+                if (placed_tokens < token_sequence && placed_tokens > 0) {
+                    connected = true
+                }
+                placed_tokens_count = Math.max(placed_tokens_count, placed_tokens)
             }
             prevToken = currentToken
         }
-        if (placed_tokens === this.updatedPositions.length) {
-            contains_all_placed_tokens = true
-        }
-        return [true, contains_all_placed_tokens]
+        placed_tokens_count = Math.max(placed_tokens_count, placed_tokens)
+        return [true, placed_tokens_count, connected]
     }
 
-    private validateRow(i: number) : [boolean, boolean] {
+    private validateRow(i: number) : [boolean, number, boolean] {
         let currentToken = undefined
         let prevToken = undefined
         let shape = undefined
         let colour = undefined
         let current_tokens: string[] = []
+        let token_sequence = 0
         let placed_tokens = 0
+        let connected = false
         let valid_shape = true
         let valid_colour = true
-        let contains_all_placed_tokens = false
+        let placed_tokens_count = 0
 
         for (let j = 0; j < this.tokenBoard[0].length; j++) {
             currentToken = this.tokenBoard[0][i][j].getToken()
@@ -150,7 +164,9 @@ export class Board implements Observer{
                     } else {
                         placed_tokens = 0
                     }
+                    token_sequence = 1
                 } else {
+                    token_sequence += 1
                     if (this.updatedPositions.includes(this.tokenBoard[0][i][j])) {
                         placed_tokens += 1
                     }
@@ -161,19 +177,20 @@ export class Board implements Observer{
                         valid_colour = false
                     }
                     if (current_tokens.includes(currentToken.getShape() + currentToken.getColour()) || (!valid_colour && !valid_shape)) {
-                        return [false, false]
+                        return [false, -1, false]
                     }
                     current_tokens.push(currentToken.getShape() + currentToken.getColour())
                 }
-            } else if (placed_tokens === this.updatedPositions.length) {
-                contains_all_placed_tokens = true
+            } else {
+                if (placed_tokens < token_sequence && placed_tokens > 0) {
+                    connected = true
+                }
+                placed_tokens_count = Math.max(placed_tokens_count, placed_tokens)
             }
             prevToken = currentToken
         }
-        if (placed_tokens === this.updatedPositions.length) {
-            contains_all_placed_tokens = true
-        }
-        return [true, contains_all_placed_tokens]
+        placed_tokens_count = Math.max(placed_tokens_count, placed_tokens)
+        return [true, placed_tokens_count, connected]
     }
 
     private addNeighbours() {
