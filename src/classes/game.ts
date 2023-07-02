@@ -106,7 +106,9 @@ export class Game{
     }
 
     public confirmTurn() {
-        if (this.board.validateBoard()) {
+        let validate_board = this.board.validateBoard()
+        if (validate_board[0]) {
+            this.active_player.updateScore(validate_board[1])
             this.board.increaseBoard()
             this.nextPlayer()
         } else {
@@ -150,9 +152,26 @@ export class Game{
         for (let j = this.active_player.getNumberOfTokens(); j < NUMBER_OF_TOKENS_PER_PLAYER && this.unplaced_tokens.length !== 0; j++) {
             this.active_player.addToken(this.unplaced_tokens.pop()!) // take the tokens from the unplaced_tokens pile
         }
-        let next_player_index = (this.players.indexOf(this.active_player) + 1) % this.players.length;
-        this.active_player = this.players[next_player_index]
-        this.action_stack = []
-        this.status_display = this.active_player.getName() + "'s turn";
+        if (this.active_player.getNumberOfTokens() === 0) {
+            this.active_player.updateScore(6)
+            this.gameOver()
+        } else {
+            let next_player_index = (this.players.indexOf(this.active_player) + 1) % this.players.length;
+            this.active_player = this.players[next_player_index]
+            this.action_stack = []
+            this.status_display = this.active_player.getName() + "'s turn";
+        }
+    }
+
+    private gameOver() {
+        let largest_score = this.players[0].getScore()
+        let winner_index = 0
+        for (let i = 1; i < this.players.length; i++) {
+            if (largest_score < this.players[i].getScore()) {
+                winner_index = i
+                largest_score = this.players[i].getScore()
+            }
+        }
+        this.status_display = this.players[winner_index].getName() + " wins"
     }
 }

@@ -52,18 +52,19 @@ export class Board implements Observer{
         }
     }
 
-    public validateBoard() : boolean {
+    public validateBoard() : [boolean, number] {
         let valid_row, valid_col
         let tiles_placed_continuously = false
         let tiles_connected = this.boardEmpty // if the board is empty then if the play is valid it will be connected
+        let score = 0
         if (this.updatedPositions.length === 0) {
-            return false
+            return [false, 0]
         }
         for (let i = 0; i < this.tokenBoard[0].length; i++) {
             valid_row = this.validateRow(i)
             valid_col = this.validateColumn(i)
             if (!valid_row[0] || !valid_col[0]) {
-                return false
+                return [false, 0]
             }
             if (valid_row[1] === this.updatedPositions.length || valid_col[1] === this.updatedPositions.length) {
                 tiles_placed_continuously = true
@@ -71,17 +72,18 @@ export class Board implements Observer{
             if (valid_row[2] || valid_col[2]) {
                 tiles_connected = true
             }
+            score += valid_col[3] + valid_row[3]
         }
         if (tiles_placed_continuously && tiles_connected) {
             this.clearUpdatedPositions()
             this.boardEmpty = false 
-            return true
+            return [true, score]
         } else {
-            return false
+            return [false, 0]
         }
     }
 
-    private validateColumn(i: number) : [boolean, number, boolean] {
+    private validateColumn(i: number) : [boolean, number, boolean, number] {
         let currentToken = undefined
         let prevToken = undefined
         let shape = undefined
@@ -93,6 +95,7 @@ export class Board implements Observer{
         let valid_shape = true
         let valid_colour = true
         let placed_tokens_count = 0
+        let score = 0
 
         for (let j = 0; j < this.tokenBoard[0].length; j++) {
             currentToken = this.tokenBoard[0][j][i].getToken()
@@ -121,23 +124,42 @@ export class Board implements Observer{
                         valid_colour = false
                     }
                     if (current_tokens.includes(currentToken.getShape() + currentToken.getColour()) || (!valid_colour && !valid_shape)) {
-                        return [false, -1, false]
+                        return [false, -1, false, 0]
                     }
                     current_tokens.push(currentToken.getShape() + currentToken.getColour())
                 }
-            } else {
+            } else if (prevToken !== undefined) {
                 if (placed_tokens < token_sequence && placed_tokens > 0) {
                     connected = true
+                }
+                if (placed_tokens > 0 && token_sequence > 1) {
+                    if (token_sequence === 6) {
+                        score += 12
+                    } else {
+                        score += token_sequence
+                    }
                 }
                 placed_tokens_count = Math.max(placed_tokens_count, placed_tokens)
             }
             prevToken = currentToken
         }
-        placed_tokens_count = Math.max(placed_tokens_count, placed_tokens)
-        return [true, placed_tokens_count, connected]
+        if (prevToken !== undefined) {
+            if (placed_tokens < token_sequence && placed_tokens > 0) {
+                connected = true
+            }
+            if (placed_tokens > 0 && token_sequence > 1) {
+                if (token_sequence === 6) {
+                    score += 12
+                } else {
+                    score += token_sequence
+                }
+            }
+            placed_tokens_count = Math.max(placed_tokens_count, placed_tokens)
+        }
+        return [true, placed_tokens_count, connected, score]
     }
 
-    private validateRow(i: number) : [boolean, number, boolean] {
+    private validateRow(i: number) : [boolean, number, boolean, number] {
         let currentToken = undefined
         let prevToken = undefined
         let shape = undefined
@@ -149,6 +171,7 @@ export class Board implements Observer{
         let valid_shape = true
         let valid_colour = true
         let placed_tokens_count = 0
+        let score = 0
 
         for (let j = 0; j < this.tokenBoard[0].length; j++) {
             currentToken = this.tokenBoard[0][i][j].getToken()
@@ -177,20 +200,40 @@ export class Board implements Observer{
                         valid_colour = false
                     }
                     if (current_tokens.includes(currentToken.getShape() + currentToken.getColour()) || (!valid_colour && !valid_shape)) {
-                        return [false, -1, false]
+                        return [false, -1, false, 0]
                     }
                     current_tokens.push(currentToken.getShape() + currentToken.getColour())
                 }
-            } else {
+            } else if (prevToken !== undefined) {
                 if (placed_tokens < token_sequence && placed_tokens > 0) {
                     connected = true
+                }
+                if (placed_tokens > 0 && token_sequence > 1) {
+                    if (token_sequence === 6) {
+                        score += 12
+                    } else {
+                        score += token_sequence
+                    }
                 }
                 placed_tokens_count = Math.max(placed_tokens_count, placed_tokens)
             }
             prevToken = currentToken
         }
-        placed_tokens_count = Math.max(placed_tokens_count, placed_tokens)
-        return [true, placed_tokens_count, connected]
+        if (prevToken !== undefined) {
+            if (placed_tokens > 0 && token_sequence > 1) {
+                if (token_sequence === 6) {
+                    score += 12
+                } else {
+                    score += token_sequence
+                }
+                console.log(placed_tokens, token_sequence)
+            }
+            if (placed_tokens < token_sequence && placed_tokens > 0) {
+                connected = true
+            }
+            placed_tokens_count = Math.max(placed_tokens_count, placed_tokens)
+        }
+        return [true, placed_tokens_count, connected, score]
     }
 
     private addNeighbours() {

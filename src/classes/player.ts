@@ -17,6 +17,14 @@ export class Player implements Observer {
         this.score = 0
     }
 
+    public getScore(): number {
+        return this.score
+    }
+
+    public updateScore(score:number) {
+        this.score += score
+    }
+
     public getName(): string {
         return this.name
     }
