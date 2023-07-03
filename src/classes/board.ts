@@ -269,37 +269,58 @@ export class Board implements Observer{
         }
         let current_size = this.tokenBoard[0].length
         let size_increase =  5 - Math.min(left, top, current_size - right, current_size - bottom)
-        for (let i = 0; i < size_increase; i++) {
-            this.growBoard()
+        while (size_increase > 0) {
+            this.growBoard(left < (current_size-right), top < (current_size - bottom))
+            left = Infinity
+            right = 0
+            top = Infinity
+            bottom = 0 
+            for (let i = 0; i < this.tokenBoard[0].length; i++) {
+                for (let j = 0; j < this.tokenBoard[0].length; j++) {
+                    if (this.tokenBoard[0][i][j].getToken() !== undefined) {
+                        left = Math.min(left, j)
+                        right = Math.max(right, j + 1)
+                        top = Math.min(top, i)
+                        bottom = Math.max(bottom, i + 1)
+                    } 
+                }
+            }
+            current_size = this.tokenBoard[0].length
+            size_increase =  5 - Math.min(left, top, current_size - right, current_size - bottom)
         }
     }
 
-    public growBoard() {
+    public growBoard(left: boolean, top: boolean) {
+        console.log(left, top)
         // add left and right columns to the board updating their neighbours
         for (let i = 0; i < this.tokenBoard[0].length; i++) {
-            this.tokenBoard[0][i] = [new Position(), ...this.tokenBoard[0][i], new Position()]
-            this.tokenBoard[0][i][0].addNeighbour(this.tokenBoard[0][i][1])
-            this.tokenBoard[0][i][1].addNeighbour(this.tokenBoard[0][i][0])
-            this.tokenBoard[0][i][0].attach(this)
-            this.tokenBoard[0][i][this.tokenBoard[0].length].addNeighbour(this.tokenBoard[0][i][this.tokenBoard[0].length+1])
-            this.tokenBoard[0][i][this.tokenBoard[0].length+1].addNeighbour(this.tokenBoard[0][i][this.tokenBoard[0].length])
-            this.tokenBoard[0][i][this.tokenBoard[0].length+1].attach(this)
+            if (left) {
+                this.tokenBoard[0][i] = [new Position(), ...this.tokenBoard[0][i]]
+                this.tokenBoard[0][i][0].addNeighbour(this.tokenBoard[0][i][1])
+                this.tokenBoard[0][i][1].addNeighbour(this.tokenBoard[0][i][0])
+                this.tokenBoard[0][i][0].attach(this)
+            } else {
+                this.tokenBoard[0][i] = [...this.tokenBoard[0][i], new Position()]
+                this.tokenBoard[0][i][this.tokenBoard[0].length-1].addNeighbour(this.tokenBoard[0][i][this.tokenBoard[0].length])
+                this.tokenBoard[0][i][this.tokenBoard[0].length].addNeighbour(this.tokenBoard[0][i][this.tokenBoard[0].length-1])
+                this.tokenBoard[0][i][this.tokenBoard[0].length].attach(this)
+            }
         }
 
-        let start_row = []
-        let end_row = []
+        let new_row = []
 
-        for (let i = 0; i < this.tokenBoard[0].length + 2; i++) { // add start and end rows to the token board updating their neighbours
-            start_row.push(new Position())
-            start_row[i].attach(this)
-            start_row[i].addNeighbour(this.tokenBoard[0][0][i])
-            this.tokenBoard[0][0][i].addNeighbour(start_row[i])
-            end_row.push(new Position())
-            end_row[i].attach(this)
-            end_row[i].addNeighbour(this.tokenBoard[0][this.tokenBoard.length-1][i])
-            this.tokenBoard[0][this.tokenBoard[0].length-1][i].addNeighbour(end_row[i])
+        for (let i = 0; i < this.tokenBoard[0].length + 1; i++) { // add start and end rows to the token board updating their neighbours
+            new_row.push(new Position())
+            new_row[i].attach(this)
+            new_row[i].addNeighbour(this.tokenBoard[0][0][i])
+            this.tokenBoard[0][0][i].addNeighbour(new_row[i])
         }
-        this.tokenBoard[0] = [start_row, ...this.tokenBoard[0], end_row]
+        if (top) {
+            this.tokenBoard[0] = [new_row, ...this.tokenBoard[0]]
+        } else {
+            this.tokenBoard[0] = [...this.tokenBoard[0], new_row]
+        }
+        
     }
 
     public getTokenBoard() {
