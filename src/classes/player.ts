@@ -41,6 +41,14 @@ export class Player implements Observer {
     update(subject: Token): void {
         if (this.selected_token === subject) {
             this.selected_token = undefined
+        } else if (this.selected_token !== undefined) {
+            let first_token = this.selected_token
+            let first_token_index = this.removeSelectedToken()
+            this.selected_token = subject
+            let second_token = this.selected_token
+            let second_token_index = this.removeSelectedToken()
+            this.insertToken(second_token_index, first_token)
+            this.insertToken(first_token_index, subject)
         } else {
             this.selected_token = subject
         }
