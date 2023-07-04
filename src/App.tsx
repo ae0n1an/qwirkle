@@ -65,21 +65,37 @@ function App(props: AppProps) {
                 <div className="mdl-cell mdl-cell--3-col mdl-cell--2-col-tablet mdl-cell--1-col-phone">
                   <button className="mdl-button mdl-button--raised mdl-button--colored mdl-color--blue" onClick={() => undoClicked()}>
                     <UndoIcon/>
+                    <br></br>
+                    <span>
+                      Undo
+                    </span>
                   </button>
                 </div>
                 <div className="mdl-cell mdl-cell--3-col mdl-cell--2-col-tablet mdl-cell--1-col-phone">
                   <button className="mdl-button mdl-button--raised mdl-button--colored mdl-color--purple" onClick={() => shuffleHand()}>
                     <RefreshIcon/>
+                    <br></br>
+                    <span>
+                      New Tokens
+                    </span>
                   </button>
                 </div>
                 <div className="mdl-cell mdl-cell--3-col mdl-cell--2-col-tablet mdl-cell--1-col-phone">
                   <button className="mdl-button mdl-button--raised mdl-button--colored mdl-color--red" onClick={() => undoAllClicked()}>
                     <ArrowDownwardIcon/>
+                    <br></br>
+                    <span>
+                      Undo All
+                    </span>
                   </button>
                 </div>
                 <div className="mdl-cell mdl-cell--3-col mdl-cell--2-col-tablet mdl-cell--1-col-phone">
                   <button className="mdl-button mdl-button--raised mdl-button--colored mdl-color--green" onClick={() => confirmMove()}>
                     <DoneIcon/>
+                    <br></br>
+                    <span>
+                      Done
+                    </span>
                   </button>
                 </div>
               </div>

@@ -7,6 +7,11 @@
   margin: 0px;
 }
 
+.mdl-button {
+  width: 100%;
+  height: 100%;
+}
+
 .highlighted {
   outline-color:green;
   outline-style: solid;
