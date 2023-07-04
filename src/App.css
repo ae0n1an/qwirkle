@@ -1,10 +1,8 @@
-.App {
+.app {
   text-align: center;
   background-color: #D5DCF9;
-}
-
-.board {
-  margin: 0px;
+  display: flex;
+  align-items: center;
 }
 
 .mdl-button {
