@@ -49,10 +49,10 @@ function DisplayGame(props: DisplayGameProps) {
 
   return (
       <div className="center mdl-grid">
-        <div className="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--4-col-phone board">
+        <div className="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--6-col-phone board">
           <DisplayBoard board={board.board} setBoard={setBoard} setPlayer={setPlayer} game={game}></DisplayBoard>
         </div>
-        <div className="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+        <div className="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
           <div className="mdl-grid">
             <div className="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
               <h2>{status.status}</h2>

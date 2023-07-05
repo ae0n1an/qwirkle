@@ -43,7 +43,7 @@ function DisplayBoard(props: PositionProps) {
   
   return (
     <>
-      <div style={wrapper}>
+      <div className='board-container' style={wrapper}>
         {renderedOutput}
       </div>
     </>

@@ -5,6 +5,16 @@
   align-items: center;
 }
 
+.board-container {
+  width: 96%;
+  /* 1:1 Aspect Ratio */
+  position: relative; /* If you want text inside of it */
+  margin: auto;
+}
+
+.board {
+}
+
 .mdl-button {
   width: 100%;
   height: 100%;
