@@ -226,7 +226,6 @@ export class Board implements Observer{
                 } else {
                     score += token_sequence
                 }
-                console.log(placed_tokens, token_sequence)
             }
             if (placed_tokens < token_sequence && placed_tokens > 0) {
                 connected = true
@@ -291,7 +290,6 @@ export class Board implements Observer{
     }
 
     public growBoard(left: boolean, top: boolean) {
-        console.log(left, top)
         // add left and right columns to the board updating their neighbours
         for (let i = 0; i < this.tokenBoard[0].length; i++) {
             if (left) {

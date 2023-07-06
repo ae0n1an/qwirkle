@@ -7,7 +7,7 @@ import {useEffect, useState} from 'react';
 import { useLocation } from 'react-router-dom'
 
 function CreateGame() {
-  const [number_of_players, setNumberOfPlayers] = useState(2);
+  const [number_of_players, setNumberOfPlayers] = useState(-1);
 
   const numberOfPlayerUpdated = () => {
     if (document.getElementById('number_of_players') !== null) {
@@ -19,7 +19,7 @@ function CreateGame() {
     <div className="Create Game">
         <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label has-placeholder">
             <select className="mdl-textfield__input" id="number_of_players" onChange={numberOfPlayerUpdated}>
-                <option value="">Select number of players</option>
+                <option value="-1">Select number of players</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
                 <option value="4">4</option>
@@ -30,7 +30,7 @@ function CreateGame() {
             </select>
         </div>
         <br></br>
-        <Link to="/game" state={{ numberOfPlayers: number_of_players}}>Make Game</Link>
+        <Link to="/game" style={{pointerEvents: number_of_players !== -1 ? 'all' : 'none'}} state={{ numberOfPlayers: number_of_players}}>Make Game</Link>
         <br></br>
         or
         <br></br>
