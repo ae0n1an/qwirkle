@@ -7,7 +7,7 @@ import { PlaceAction } from "./placeAction";
 const COLORS = ["red", "blue", "green", "orange", "purple", "yellow"];
 const SHAPES = ["square", "circle", "triangle", "diamond", "four_point_star", "six_point_star"];
 const NUMBER_OF_EACH_TOKEN = 3;
-const NUMBER_OF_PLAYERS = 3;
+//const NUMBER_OF_PLAYERS = 3;
 const NUMBER_OF_TOKENS_PER_PLAYER = 6;
 
 export class Game{
@@ -18,12 +18,12 @@ export class Game{
     private action_stack: PlaceAction[];
     private status_display: string;
 
-    constructor() {
+    constructor(number_of_players: number) {
         this.board = new Board();
         this.unplaced_tokens = [];
         this.generate_tokens();
         this.players = [];
-        this.generate_players();
+        this.generate_players(number_of_players);
         this.active_player = this.players[0];
         this.action_stack = [];
         this.status_display = this.active_player.getName() + "'s turn";
@@ -70,8 +70,8 @@ export class Game{
         }
     }
 
-    private generate_players() {
-        for (let i = 0; i < NUMBER_OF_PLAYERS; i++) {
+    private generate_players(number_of_players: number) {
+        for (let i = 0; i < number_of_players; i++) {
             let tokens: Token[] = []
             for (let j = 0; j < NUMBER_OF_TOKENS_PER_PLAYER; j++) {
                 tokens.push(this.unplaced_tokens.pop()!)
