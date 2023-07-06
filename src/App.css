@@ -3,6 +3,7 @@
   background-color: #D5DCF9;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .board-container {
