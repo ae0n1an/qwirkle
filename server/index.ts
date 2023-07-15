@@ -20,17 +20,18 @@ server.listen(3001, () => {
     console.log("server is running on port 3001...")
 })
 
-io.on("connection", (socket) => {
+io.on("connection", (socket: any) => {
     console.log(`User connected: ${socket.id}`)
 
-    socket.on("join_room", (data) => {
-        console.log(data)
+    socket.on("join_room", (data : {room: string}) => {
         console.log(`User ${socket.id} joined room ${data.room}`)
         socket.join(data.room)
     })
 
-    socket.on("send_message", (data) => {
+    socket.on("send_message", (data: {message: string, room: string}) => {
         console.log(`User ${socket.id} sent message ${data.message} room ${data.room}`)
         socket.to(data.room).emit("recieve_message", data.message)
     })
-}) 
+})
+
+export {}

@@ -23,12 +23,11 @@ const PlayersLobbyDisplay: React.FunctionComponent<IApplicationProps> = (props) 
     });
 
     return (
-        <div>
-            <h2>Lobby Code: <strong>{}</strong></h2>
+        <>
             <div className="mdl-list">
                 {renderedOutput}
             </div>
-        </div>
+        </>
     );
 };
 

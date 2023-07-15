@@ -6,6 +6,8 @@ import DisplayGame from '../DisplayGame';
 import { Link } from 'react-router-dom';
 import {useEffect, useState} from 'react';
 
+const ROOM_ID_SIZE = 10;
+
 function Home() {
   const [nickname, setNickname] = useState("")
   const [avatar, setAvatar] = useState("")
@@ -17,6 +19,18 @@ function Home() {
   const avatarUpdated = () => {
     setAvatar((document.getElementById('avatar') as HTMLInputElement).value)
   };
+
+  function makeid(length: number) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
+    return result;
+  }
 
   return (
     <div className="Home">
@@ -33,7 +47,7 @@ function Home() {
               </select>
           </div>
           <br></br>
-          <Link to="/lobby" style={{pointerEvents: (avatar !== "" && nickname !== "") ? 'all' : 'none'}} state={{name: nickname, avatar: avatar, is_host: true}}>Host Game</Link>
+          <Link to="/lobby" style={{pointerEvents: (avatar !== "" && nickname !== "") ? 'all' : 'none'}} state={{name: nickname, avatar: avatar, room:makeid(ROOM_ID_SIZE)}}>Host Game</Link>
           <br></br>
           or
           <br></br>

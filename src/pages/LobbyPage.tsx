@@ -7,10 +7,12 @@ import { useLocation } from 'react-router-dom';
 import PlayersLobbyDisplay from '../PlayersLobbyDisplay';
 import * as io from "socket.io-client";
 
+const KEY_SIZE = 10;
+
 function LobbyPage() {
   const socket = io.connect("http://localhost:3001")
   const location = useLocation()
-  const { name, avatar, is_host, room } = location.state
+  const { name, avatar, room } = location.state
   const [message, setMessage] = useState('');
   const [chatWindow, setChat] = useState<JSX.Element[]>([]);
   const [number_of_players, setNumberOfPlayers] = useState(3);
@@ -23,7 +25,6 @@ function LobbyPage() {
 
   useEffect(() => {
     socket.on("recieve_message", (data) => {
-      console.log(data)
       setChat([...chatWindow, <p>{data}</p>])
     })
   }, [socket])
@@ -36,6 +37,7 @@ function LobbyPage() {
 
   return (
     <div className="HostGame">
+        <h2>Lobby Code: <strong>{room}</strong></h2>
         <PlayersLobbyDisplay players={[]}/>
         <br></br>
         {chatWindow}
