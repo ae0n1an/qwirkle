@@ -62,7 +62,7 @@ function DisplayGame(props: DisplayGameProps) {
             </div>
             <div className="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
               <div className="mdl-grid">
-                <div className="mdl-cell mdl-cell--3-col mdl-cell--2-col-tablet mdl-cell--1-col-phone">
+                <div className="mdl-cell mdl-cell--3-col mdl-cell--2-col-tablet mdl-cell--1-col-phone game_button">
                   <button className="mdl-button mdl-button--raised mdl-button--colored mdl-color--blue" onClick={() => undoClicked()}>
                     <UndoIcon/>
                     <br></br>
@@ -71,7 +71,7 @@ function DisplayGame(props: DisplayGameProps) {
                     </span>
                   </button>
                 </div>
-                <div className="mdl-cell mdl-cell--3-col mdl-cell--2-col-tablet mdl-cell--1-col-phone">
+                <div className="mdl-cell mdl-cell--3-col mdl-cell--2-col-tablet mdl-cell--1-col-phone game_button">
                   <button className="mdl-button mdl-button--raised mdl-button--colored mdl-color--purple" onClick={() => shuffleHand()}>
                     <RefreshIcon/>
                     <br></br>
@@ -80,7 +80,7 @@ function DisplayGame(props: DisplayGameProps) {
                     </span>
                   </button>
                 </div>
-                <div className="mdl-cell mdl-cell--3-col mdl-cell--2-col-tablet mdl-cell--1-col-phone">
+                <div className="mdl-cell mdl-cell--3-col mdl-cell--2-col-tablet mdl-cell--1-col-phone game_button">
                   <button className="mdl-button mdl-button--raised mdl-button--colored mdl-color--red" onClick={() => undoAllClicked()}>
                     <ArrowDownwardIcon/>
                     <br></br>
@@ -89,7 +89,7 @@ function DisplayGame(props: DisplayGameProps) {
                     </span>
                   </button>
                 </div>
-                <div className="mdl-cell mdl-cell--3-col mdl-cell--2-col-tablet mdl-cell--1-col-phone">
+                <div className="mdl-cell mdl-cell--3-col mdl-cell--2-col-tablet mdl-cell--1-col-phone game_button">
                   <button className="mdl-button mdl-button--raised mdl-button--colored mdl-color--green" onClick={() => confirmMove()}>
                     <DoneIcon/>
                     <br></br>
