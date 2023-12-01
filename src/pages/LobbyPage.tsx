@@ -3,52 +3,59 @@ import { Game } from "../classes/game";
 import DisplayGame from '../DisplayGame';
 import { Link } from 'react-router-dom';
 import {useEffect, useState} from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import PlayersLobbyDisplay from '../PlayersLobbyDisplay';
 import * as io from "socket.io-client";
 
-const KEY_SIZE = 10;
+// storing socket connection in this global variable
+let socket:any = null;
 
 function LobbyPage() {
-  const socket = io.connect("http://localhost:3001")
   const location = useLocation()
-  const { name, avatar, room } = location.state
-  const [message, setMessage] = useState('');
-  const [chatWindow, setChat] = useState<JSX.Element[]>([]);
-  const [number_of_players, setNumberOfPlayers] = useState(3);
+  const navigate = useNavigate();
+  const { room, is_host, nickname, avatar } = location.state
+  const [players, setPlayers] = useState<{nickname: string, avatar: string}[]>([{nickname: nickname, avatar: avatar}]);
 
-  const numberOfPlayerUpdated = () => {
-    if (document.getElementById('number_of_players') !== null) {
-      setNumberOfPlayers(parseInt((document.getElementById('number_of_players') as HTMLInputElement).value))
-    }
-  };
-
+  // after component mount...
   useEffect(() => {
-    socket.on("recieve_message", (data) => {
-      setChat([...chatWindow, <p>{data}</p>])
+    // connect to the socket server
+    socket = io.connect("http://localhost:3001")
+
+    socket.emit("join_room", {room: room, is_host:is_host, nickname: nickname, avatar: avatar})
+
+    // when connected, look for when the server emits a new player joining
+    socket.on("player joined", (player: {socketId: string, nickname: string, avatar: string}) => {
+      players.push(player)
+      setPlayers(players)
     })
-  }, [socket])
 
-  socket.emit("join_room", {room})
+    // when disconnected, look for when the server emits a new player disconnecting
+    socket.on("player disconnected", (player: {socketId: string, nickname: string, avatar: string}) => {
+      for (let i = 0; i < players.length; i++) {
+        //players.slice.
+      }
+      setPlayers(players)
+    })
+  }, []);
 
-  const sendMessage = () => {
-    socket.emit("send_message", {message, room})
-  };
+  if (localStorage.getItem("userName") === null || localStorage.getItem("avatar") === null) {
+    localStorage.removeItem("userName")
+    localStorage.removeItem("avatar")
+    navigate('/');
+  }
+
+  /*
+  <div className="mdl-textfield mdl-js-textfield">
+    <input className="mdl-textfield__input" type="text" placeholder= "Enter Message..." onChange={(event)=>{setMessage(event.target.value)}}></input>
+  </div>
+  */
 
   return (
     <div className="HostGame">
         <h2>Lobby Code: <strong>{room}</strong></h2>
-        <PlayersLobbyDisplay players={[]}/>
+        <PlayersLobbyDisplay players={players}/>
         <br></br>
-        {chatWindow}
-        <div className="mdl-textfield mdl-js-textfield">
-          <input className="mdl-textfield__input" type="text" placeholder= "Enter Message..." onChange={(event)=>{setMessage(event.target.value)}}></input>
-        </div>
-        <button onClick={() => sendMessage()} className="mdl-button mdl-js-button mdl-button--raised">
-          send
-        </button>
-        <br></br>
-        <Link to="/game" style={{pointerEvents: number_of_players > 1 ? 'all' : 'none'}} state={{ numberOfPlayers: number_of_players}}>Start Game</Link>
+        <Link to="/game" style={{pointerEvents: players.length > 1 ? 'all' : 'none'}} state={{ numberOfPlayers: players.length}}>Start Game</Link>
         <br></br>
         or
         <br></br>

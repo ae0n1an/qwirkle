@@ -32,6 +32,11 @@ function Home() {
     return result;
   }
 
+  const updateInfo = () => {
+    localStorage.setItem('userName', nickname);
+    localStorage.setItem('avatar', avatar);
+  }
+
   return (
     <div className="Home">
           <div className="mdl-textfield mdl-js-textfield">
@@ -47,11 +52,11 @@ function Home() {
               </select>
           </div>
           <br></br>
-          <Link to="/lobby" style={{pointerEvents: (avatar !== "" && nickname !== "") ? 'all' : 'none'}} state={{name: nickname, avatar: avatar, room:makeid(ROOM_ID_SIZE)}}>Host Game</Link>
+          <Link to="/lobby" style={{pointerEvents: (avatar !== "" && nickname !== "") ? 'all' : 'none'}} onClick={updateInfo} state={{room:makeid(ROOM_ID_SIZE), is_host:true, nickname: nickname, avatar: avatar}}>Host Game</Link>
           <br></br>
           or
           <br></br>
-          <Link to="/join" state={{name: nickname, avatar: avatar}}>Join a Game</Link>
+          <Link to="/join" style={{pointerEvents: (avatar !== "" && nickname !== "") ? 'all' : 'none'}} onClick={updateInfo} state={{nickname: nickname, avatar: avatar}}>Join a Game</Link>
     </div>
   );
 }

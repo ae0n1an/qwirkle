@@ -4,12 +4,19 @@ import { Routes, Route } from 'react-router-dom';
 import DisplayGame from '../DisplayGame';
 import { Link } from 'react-router-dom';
 import {useEffect, useState} from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function JoinPage() {
   const location = useLocation()
-  const { name, avatar } = location.state
+  const { nickname, avatar } = location.state
+  const navigate = useNavigate();
   const [room, setRoom] = useState("");
+
+  if (localStorage.getItem("userName") === null || localStorage.getItem("avatar") === null) {
+    navigate('/');
+  }
+
+  console.log(localStorage.getItem("userName"), localStorage.getItem("avatar"))
 
   const infoUpdated = () => {
     setRoom((document.getElementById('gameCode') as HTMLInputElement).value)
@@ -21,7 +28,7 @@ function JoinPage() {
             <input className="mdl-textfield__input" type="text" placeholder= "Enter Game Code..." id="gameCode" onChange={infoUpdated}></input>
         </div>
         <br></br>
-        <Link to="/lobby" style={{pointerEvents: room !== "" ? 'all' : 'none'}} state={{name: name, avatar: avatar, is_host: false, room: room}}>Join Game</Link>
+        <Link to="/lobby" style={{pointerEvents: room !== "" ? 'all' : 'none'}} state={{room:room, is_host:false, nickname: nickname, avatar: avatar}}>Join Game</Link>
         <br></br>
         or
         <br></br>
