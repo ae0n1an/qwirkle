@@ -57,6 +57,10 @@ function Home() {
           or
           <br></br>
           <Link to="/join" style={{pointerEvents: (avatar !== "" && nickname !== "") ? 'all' : 'none'}} onClick={updateInfo} state={{nickname: nickname, avatar: avatar}}>Join a Game</Link>
+          <br></br>
+          or
+          <br></br>
+          <Link to="/game" state={{ numberOfPlayers: 4}}>Play Game Locally with 4 players</Link>
     </div>
   );
 }
