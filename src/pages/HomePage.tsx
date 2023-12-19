@@ -5,12 +5,13 @@ import { Routes, Route } from 'react-router-dom';
 import DisplayGame from '../DisplayGame';
 import { Link } from 'react-router-dom';
 import {useEffect, useState} from 'react';
+import useLocalStorage from '../hooks/useLocalStorage';
 
 const ROOM_ID_SIZE = 10;
 
 function Home() {
-  const [nickname, setNickname] = useState("")
-  const [avatar, setAvatar] = useState("")
+  const [nickname, setNickname] = useLocalStorage("userName", "");
+  const [avatar, setAvatar] = useLocalStorage("avatar", "");
 
   const nicknameUpdated = () => {
     setNickname((document.getElementById('nickname') as HTMLInputElement).value)
@@ -32,19 +33,14 @@ function Home() {
     return result;
   }
 
-  const updateInfo = () => {
-    localStorage.setItem('userName', nickname);
-    localStorage.setItem('avatar', avatar);
-  }
-
   return (
     <div className="Home">
           <div className="mdl-textfield mdl-js-textfield">
-              <input className="mdl-textfield__input" type="text" placeholder= "Enter Nickname..." id="nickname" onChange={nicknameUpdated}></input>
+              <input className="mdl-textfield__input" type="text" placeholder= "Enter Nickname..." id="nickname" onChange={nicknameUpdated} value={nickname}></input>
           </div>
           <br></br>
           <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label has-placeholder">
-              <select className="mdl-textfield__input" id="avatar" onChange={avatarUpdated}>
+              <select className="mdl-textfield__input" id="avatar" onChange={avatarUpdated} value={avatar}>
                   <option className="" value="">Select Avatar</option>
                   <option className="g" value="Green">Green</option>
                   <option className="r" value="Red">Red</option>
@@ -52,11 +48,11 @@ function Home() {
               </select>
           </div>
           <br></br>
-          <Link to="/lobby" style={{pointerEvents: (avatar !== "" && nickname !== "") ? 'all' : 'none'}} onClick={updateInfo} state={{room:makeid(ROOM_ID_SIZE), is_host:true, nickname: nickname, avatar: avatar}}>Host Game</Link>
+          <Link to="/lobby" style={{pointerEvents: (avatar !== "" && nickname !== "") ? 'all' : 'none'}} state={{room:makeid(ROOM_ID_SIZE), is_host:true, nickname: nickname, avatar: avatar}}>Host Game</Link>
           <br></br>
           or
           <br></br>
-          <Link to="/join" style={{pointerEvents: (avatar !== "" && nickname !== "") ? 'all' : 'none'}} onClick={updateInfo} state={{nickname: nickname, avatar: avatar}}>Join a Game</Link>
+          <Link to="/join" style={{pointerEvents: (avatar !== "" && nickname !== "") ? 'all' : 'none'}} state={{nickname: nickname, avatar: avatar}}>Join a Game</Link>
           <br></br>
           or
           <br></br>

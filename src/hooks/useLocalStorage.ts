@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react'
 
-const PREFIX = 'chat-app-clone-';
+const PREFIX = 'qwirkle-';
 
 export default function useLocalStorage(key: string, initialValue: any) {
     const prefixedkey = PREFIX + key;
