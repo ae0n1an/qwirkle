@@ -8,6 +8,7 @@ import JoinPage from './pages/JoinPage';
 import { SocketProvider } from './contexts/SocketProvider';
 import useLocalStorage from './hooks/useLocalStorage';
 import { v4 as uuidV4 } from 'uuid';
+import { ConversationsProvider } from './contexts/ConversationsProvider';
 
 function App() {
   const [id, setId] = useLocalStorage('id', uuidV4());
@@ -15,12 +16,14 @@ function App() {
   return (
     <div className="app">
       <SocketProvider id={id}>
-        <Routes>
-          <Route path='/' element={<Home/>}></Route>
-          <Route path='/lobby' element={<LobbyPage/>}> </Route>
-          <Route path='/game' element={<GamePage/>}> </Route>
-          <Route path='/join' element={<JoinPage/>}> </Route>
-        </Routes>
+        <ConversationsProvider id={id}>
+          <Routes>
+            <Route path='/' element={<Home/>}></Route>
+            <Route path='/lobby' element={<LobbyPage/>}> </Route>
+            <Route path='/game' element={<GamePage/>}> </Route>
+            <Route path='/join' element={<JoinPage/>}> </Route>
+          </Routes>
+        </ConversationsProvider>
       </SocketProvider>
     </div>
   );
