@@ -5,15 +5,33 @@ import GamePage from './pages/GamePage';
 import LobbyPage from './pages/LobbyPage';
 import Home from './pages/HomePage';
 import JoinPage from './pages/JoinPage';
-import { SocketProvider } from './contexts/SocketProvider';
-import { PlayersProvider } from './contexts/PlayersProvider';
+import { SocketProvider, useSocket } from './contexts/SocketProvider';
+import { PlayersProvider, usePlayers } from './contexts/PlayersProvider';
 import useLocalStorage from './hooks/useLocalStorage';
 import { v4 as uuidV4 } from 'uuid';
+import { useEffect } from 'react';
 
 function App() {
   const [id, setId] = useLocalStorage('id', uuidV4());
   const [nickname, setNickname] = useLocalStorage("userName", "");
   const [avatar, setAvatar] = useLocalStorage("avatar", "");
+  const {lobbyId} = usePlayers();
+  const socket = useSocket();
+
+  useEffect(() => {
+    const handleUnload = () => {
+      socket?.emit('leave-lobby', {lobbyId: lobbyId, playerId: id})
+    };
+
+    window.addEventListener('unload', handleUnload);
+
+    return () => {
+      // Cleanup: remove the event listener when the component is unmounted
+      window.removeEventListener('unload', handleUnload);
+      socket?.disconnect();
+    };
+  }, []); // Empty dependency array means this effect runs once, similar to componentDidMount
+
 
   return (
     <div className="app">

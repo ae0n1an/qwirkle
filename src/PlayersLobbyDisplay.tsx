@@ -13,7 +13,6 @@ export interface IApplicationProps {
 
 const PlayersLobbyDisplay: React.FunctionComponent<IApplicationProps> = (props) => {
     const { players } = props;
-    console.log(players)
 
     const renderedOutput: JSX.Element[] = []
 
