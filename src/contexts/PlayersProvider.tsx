@@ -7,14 +7,16 @@ type PlayersContextType = {
     lobbyId: string,
     players: PlayerType[],
     createLobby: (name: string, avatar: string) => void,
-    joinLobby: (providedLobbyId: string, name: string, avatar: string) => void
+    joinLobby: (providedLobbyId: string, name: string, avatar: string) => void,
+    leaveLobby: () => void
 }
 
 const PlayersContext = React.createContext<PlayersContextType>({
     lobbyId: "",
     players: [],
     createLobby: (name: string, avatar: string) => {},
-    joinLobby: (providedLobbyId: string, name: string, avatar: string) => {}
+    joinLobby: (providedLobbyId: string, name: string, avatar: string) => {},
+    leaveLobby: () => {}
 })
 
 type PlayerType = {
@@ -32,17 +34,18 @@ export function PlayersProvider({ id, children } : {id: string, children: ReactN
     const [lobbyId, setLobbyId] = useLocalStorage('lobbyId', "")
     const socket = useSocket()
 
-    const addPlayerToLobby = useCallback((players: PlayerType[]) => {
-        setPlayers(players)
+    const updateLobby = useCallback(({lobbyId, lobby}: {lobbyId: String; lobby: {host: PlayerType, players:PlayerType[]}}) => {
+        setLobbyId(lobbyId);
+        setPlayers(lobby.players)
     }, [setPlayers])
 
     useEffect(() => {
         if (socket == null) return
 
-        socket.on('receive-lobby', addPlayerToLobby)
+        socket.on('receive-lobby', updateLobby)
 
         return () => { socket.off('receive-lobby') }
-    }, [socket, addPlayerToLobby])
+    }, [socket, updateLobby])
 
 
     function addPlayer(id: string, name: string, avatar: string) {
@@ -53,18 +56,31 @@ export function PlayersProvider({ id, children } : {id: string, children: ReactN
 
     function joinLobby(providedLobbyId: string, name: string, avatar:string) {
         socket?.emit('join-lobby', { lobbyId: providedLobbyId, newPlayer: {id:id, name:name, avatar:avatar}})
-        setLobbyId(providedLobbyId);
     }
 
     function createLobby(name: string, avatar:string) {
         let newlobbyId = uuidV4();
         socket?.emit('create-lobby', { lobbyId: newlobbyId, player: {id:id, name:name, avatar:avatar}})
-        setLobbyId(newlobbyId);
-        setPlayers([{id:id, name:name, avatar:avatar}])
+    }
+
+    function leaveLobby() {
+        console.log(socket)
+        socket?.emit('leave-lobby', {lobbyId: lobbyId, playerId: id})
+
+        updateLobby({
+            lobbyId: "",
+            lobby: {
+                host: {
+                    id: "",
+                    name: "",
+                    avatar: ""
+                },
+                players: []
+            }})
     }
 
   return (
-        <PlayersContext.Provider value={{ players, lobbyId, createLobby, joinLobby }}>
+        <PlayersContext.Provider value={{ players, lobbyId, createLobby, joinLobby, leaveLobby}}>
             {children}
         </PlayersContext.Provider>
     )

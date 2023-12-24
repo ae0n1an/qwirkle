@@ -25,6 +25,7 @@ io.on('connection', (socket: any) => {
 
     socket.on('create-lobby', ({lobbyId, player} : {lobbyId: string, player: PlayerType}) => {
         lobbies[lobbyId] = {host: player, players: [player]}
+        io.to(player.id).emit('receive-lobby', {lobbyId: lobbyId, lobby: lobbies[lobbyId]})
         console.log('new lobby created\nlobby id: %s host id: %s\n', lobbyId, player.id)
     });
 
@@ -35,7 +36,7 @@ io.on('connection', (socket: any) => {
 
             // iterate through the current players and emit the current lobby back to them
             lobbies[lobbyId].players.forEach((player: PlayerType) => {
-                io.to(player.id).emit('receive-lobby', lobbies[lobbyId].players)
+                io.to(player.id).emit('receive-lobby', {lobbyId: lobbyId, lobby: lobbies[lobbyId]})
                 //socket.broadcast.to(player.id).emit('receive-lobby', lobbies[lobbyId].players)
             });
 
@@ -43,11 +44,43 @@ io.on('connection', (socket: any) => {
 
         }
         else {
-            console.log('player tried to join nonexistent lobby\nlobby id: %s player id: %s', lobbyId, newPlayer.id)
+            console.log('player tried to join nonexistent lobby\nlobby id: %s player id: %s\n', lobbyId, newPlayer.id)
         }
     });
 
-    
+    socket.on('leave-lobby', ({lobbyId, playerId}: {lobbyId: string, playerId: string}) => {
+        console.log({lobbyId, playerId})
+        if (lobbyId in lobbies) {
+
+            // remove player id from the lobby
+            const index = lobbies[lobbyId].players.map(p => p.id).indexOf(playerId);
+            if (index > -1) {
+                lobbies[lobbyId].players.splice(index, 1);
+                console.log('player removed from lobby\nlobby id: %s player id: %s\n', lobbyId, playerId)
+            }
+
+            // remove the lobbyId if the lobby is empty
+            if (lobbies[lobbyId].players.length == 0) {
+                delete lobbies[lobbyId]
+                console.log('lobby removed\nlobby id: %s\n', lobbyId)
+            }
+            else if (lobbies[lobbyId].host.id == playerId) {
+                // else re assign the lobby host to the next player
+                lobbies[lobbyId].host = lobbies[lobbyId].players[0]
+                console.log('lobby host changed to new player\nlobby id: %s player id: %s\n', lobbyId, playerId)
+
+                // iterate through the current lobby players and emit the current lobby back to them
+                lobbies[lobbyId].players.forEach((player: PlayerType) => {
+                    io.to(player.id).emit('receive-lobby', {lobbyId: lobbyId, lobby: lobbies[lobbyId]})
+                });
+            }
+        }
+        else {
+            console.log('player tried to leave a nonexistent lobby\nlobby id: %s player id: %s\n', lobbyId, playerId)
+        }
+    });
+
+
 })
 
 export {}

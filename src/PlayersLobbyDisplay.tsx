@@ -23,7 +23,7 @@ const PlayersLobbyDisplay: React.FunctionComponent<IApplicationProps> = (props) 
             <i className="material-icons mdl-list__item-avatar">person</i>
             <span>{player.name}</span>
         </span>
-        <div className="mdl-list__item-secondary-action">{player.name}</div>
+        <div className="mdl-list__item-secondary-action">{player.avatar}</div>
     </div>)
     });
 

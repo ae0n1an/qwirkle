@@ -1,18 +1,27 @@
 import React from 'react';
 import '../App.css';
 import { Game } from "../classes/game";
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route} from 'react-router-dom';
 import DisplayGame from '../DisplayGame';
 import { Link } from 'react-router-dom';
 import {useEffect, useState} from 'react';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { v4 as uuidV4 } from 'uuid';
 import { usePlayers } from '../contexts/PlayersProvider';
+import { useSocket } from '../contexts/SocketProvider';
 
 const ROOM_ID_SIZE = 10;
 
 function Home({nickname, setNickname, avatar, setAvatar}:{nickname: string, setNickname:any, avatar:string, setAvatar:any}) {
-  const { createLobby } = usePlayers();
+  const { createLobby, leaveLobby, lobbyId } = usePlayers();
+  const socket = useSocket();
+
+  // when the socket is updated try to leave the lobby
+  useEffect(() => {
+    if (socket !== undefined && lobbyId !== "") {
+      leaveLobby()
+    }
+  }, [socket]); // run when the page mounts and when pathname is changed
 
   const nicknameUpdated = () => {
     setNickname((document.getElementById('nickname') as HTMLInputElement).value)
@@ -49,7 +58,7 @@ function Home({nickname, setNickname, avatar, setAvatar}:{nickname: string, setN
           <br></br>
           or
           <br></br>
-          <Link to="/game" state={{ players: ["p1", "p2", "p3", "p4"]}}>Play Game Locally with 4 players</Link>
+          <Link to="/game" state={{players: ["p1", "p2", "p3", "p4"]}}>Play Game Locally with 4 players</Link>
     </div>
   );
 }
