@@ -6,12 +6,13 @@ import DisplayGame from '../DisplayGame';
 import { Link } from 'react-router-dom';
 import {useEffect, useState} from 'react';
 import useLocalStorage from '../hooks/useLocalStorage';
+import { v4 as uuidV4 } from 'uuid';
+import { usePlayers } from '../contexts/PlayersProvider';
 
 const ROOM_ID_SIZE = 10;
 
-function Home() {
-  const [nickname, setNickname] = useLocalStorage("userName", "");
-  const [avatar, setAvatar] = useLocalStorage("avatar", "");
+function Home({nickname, setNickname, avatar, setAvatar}:{nickname: string, setNickname:any, avatar:string, setAvatar:any}) {
+  const { createLobby } = usePlayers();
 
   const nicknameUpdated = () => {
     setNickname((document.getElementById('nickname') as HTMLInputElement).value)
@@ -21,17 +22,9 @@ function Home() {
     setAvatar((document.getElementById('avatar') as HTMLInputElement).value)
   };
 
-  function makeid(length: number) {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
-    let counter = 0;
-    while (counter < length) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-      counter += 1;
-    }
-    return result;
-  }
+  function handleHostLobby() {
+    createLobby(nickname, avatar)
+  };
 
   return (
     <div className="Home">
@@ -48,15 +41,15 @@ function Home() {
               </select>
           </div>
           <br></br>
-          <Link to="/lobby" style={{pointerEvents: (avatar !== "" && nickname !== "") ? 'all' : 'none'}} state={{room:makeid(ROOM_ID_SIZE), is_host:true, nickname: nickname, avatar: avatar}}>Host Game</Link>
+          <Link to="/lobby" style={{pointerEvents: (avatar !== "" && nickname !== "") ? 'all' : 'none'}} onClick={handleHostLobby}>Host Game</Link>
           <br></br>
           or
           <br></br>
-          <Link to="/join" style={{pointerEvents: (avatar !== "" && nickname !== "") ? 'all' : 'none'}} state={{nickname: nickname, avatar: avatar}}>Join a Game</Link>
+          <Link to="/join" style={{pointerEvents: (avatar !== "" && nickname !== "") ? 'all' : 'none'}}>Join a Game</Link>
           <br></br>
           or
           <br></br>
-          <Link to="/game" state={{ numberOfPlayers: 4}}>Play Game Locally with 4 players</Link>
+          <Link to="/game" state={{ players: ["p1", "p2", "p3", "p4"]}}>Play Game Locally with 4 players</Link>
     </div>
   );
 }

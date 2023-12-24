@@ -6,24 +6,26 @@ import LobbyPage from './pages/LobbyPage';
 import Home from './pages/HomePage';
 import JoinPage from './pages/JoinPage';
 import { SocketProvider } from './contexts/SocketProvider';
+import { PlayersProvider } from './contexts/PlayersProvider';
 import useLocalStorage from './hooks/useLocalStorage';
 import { v4 as uuidV4 } from 'uuid';
-import { ConversationsProvider } from './contexts/ConversationsProvider';
 
 function App() {
   const [id, setId] = useLocalStorage('id', uuidV4());
+  const [nickname, setNickname] = useLocalStorage("userName", "");
+  const [avatar, setAvatar] = useLocalStorage("avatar", "");
 
   return (
     <div className="app">
       <SocketProvider id={id}>
-        <ConversationsProvider id={id}>
+        <PlayersProvider id={id}>
           <Routes>
-            <Route path='/' element={<Home/>}></Route>
+            <Route path='/' element={<Home nickname={nickname} setNickname={setNickname} avatar={avatar} setAvatar={setAvatar}/>}> </Route>
             <Route path='/lobby' element={<LobbyPage/>}> </Route>
             <Route path='/game' element={<GamePage/>}> </Route>
-            <Route path='/join' element={<JoinPage/>}> </Route>
+            <Route path='/join' element={<JoinPage nickname={nickname} avatar={avatar}/>}> </Route>
           </Routes>
-        </ConversationsProvider>
+        </PlayersProvider>
       </SocketProvider>
     </div>
   );

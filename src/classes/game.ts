@@ -18,12 +18,12 @@ export class Game{
     private action_stack: PlaceAction[];
     private status_display: string;
 
-    constructor(number_of_players: number) {
+    constructor(players: string[]) {
         this.board = new Board();
         this.unplaced_tokens = [];
         this.generate_tokens();
         this.players = [];
-        this.generate_players(number_of_players);
+        this.generate_players(players);
         this.active_player = this.players[0];
         this.action_stack = [];
         this.status_display = this.active_player.getName() + "'s turn";
@@ -70,13 +70,13 @@ export class Game{
         }
     }
 
-    private generate_players(number_of_players: number) {
-        for (let i = 0; i < number_of_players; i++) {
+    private generate_players(players: string[]) {
+        for (let i = 0; i < players.length; i++) {
             let tokens: Token[] = []
             for (let j = 0; j < NUMBER_OF_TOKENS_PER_PLAYER; j++) {
                 tokens.push(this.unplaced_tokens.pop()!)
             }
-            this.players.push(new Player(tokens, "Player " + (i+1).toString()))
+            this.players.push(new Player(tokens, players[i]))
         }
     }
 

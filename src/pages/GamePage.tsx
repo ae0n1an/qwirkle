@@ -6,11 +6,11 @@ import { useLocation } from 'react-router-dom'
 
 function GamePage() {
   const location = useLocation()
-  const { numberOfPlayers } = location.state
+  const { players } = location.state
 
   return (
       <>
-        <DisplayGame game = {new Game(numberOfPlayers)}></DisplayGame>
+        <DisplayGame game = {new Game(players)}></DisplayGame>
       </>
   );
 }
