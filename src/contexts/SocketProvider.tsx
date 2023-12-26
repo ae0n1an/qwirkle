@@ -34,6 +34,20 @@ export function SocketProvider({ id, children } : {id: string, children: ReactNo
         return () => { newSocket.close() }
     }, [id])
 
+    useEffect(() => {
+      const heartbeatInterval = setInterval(() => {
+        // Send a heartbeat message to the server
+        if (socket) {
+          socket.emit('heartbeat');
+        }
+      }, 5000); // Adjust the interval as needed (e.g., every 5 seconds)
+  
+      // Clean up the interval when the socket is closed or component unmounts
+      return () => {
+        clearInterval(heartbeatInterval);
+      };
+    }, [socket]);
+
     return (
         <SocketContext.Provider value={socket}>
             {children}

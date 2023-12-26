@@ -51,7 +51,7 @@ io.on('connection', (socket: any) => {
         }
     });
 
-    socket.on('leave-lobby', ({lobbyId, playerId}: {lobbyId: string, playerId: string}) => {
+    function leaveLobby(lobbyId: string, playerId:string) {
         if (lobbyId in lobbies) {
             // remove the players lobby
             delete playerToLobby[playerId]
@@ -71,54 +71,61 @@ io.on('connection', (socket: any) => {
             else if (lobbies[lobbyId].host.id == playerId) {
                 // else re assign the lobby host to the next player
                 lobbies[lobbyId].host = lobbies[lobbyId].players[0]
-                console.log('lobby host changed to new player\nlobby id: %s player id: %s\n', lobbyId, playerId)
+                console.log('lobby host changed to new player\nlobby id: %s new player id: %s\n', lobbyId, lobbies[lobbyId].players[0].id)
+            }
 
+            if (lobbyId in lobbies) {
                 // iterate through the current lobby players and emit the current lobby back to them
                 lobbies[lobbyId].players.forEach((player: PlayerType) => {
                     io.to(player.id).emit('receive-lobby', {lobbyId: lobbyId, lobby: lobbies[lobbyId]})
                 });
             }
+
+            // send the disconnected player back an empty lobby
+            console.log('kicked player sent back empty lobby\nplayer id: %s\n', playerId)
+            io.to(playerId).emit('receive-lobby', {lobbyId: "None", lobby: {
+                host: {id: "", name: "", avatar: ""},
+                players: []
+            }})
         }
         else {
             console.log('player tried to leave a nonexistent lobby\nlobby id: %s player id: %s\n', lobbyId, playerId)
         }
+    }
+
+    socket.on('leave-lobby', ({lobbyId, playerId}: {lobbyId: string, playerId: string}) => {
+        leaveLobby(lobbyId, playerId)
     });
 
     // Handle disconnect event
     socket.on('disconnect', () => {
-        const lobbyId = playerToLobby[id]
-        if (lobbyId in lobbies) {
-            // remove the players lobby
-            delete playerToLobby[id]
-
-            // remove player id from the lobby
-            const index = lobbies[lobbyId].players.map(p => p.id).indexOf(id);
-            if (index > -1) {
-                lobbies[lobbyId].players.splice(index, 1);
-                console.log('player removed from lobby\nlobby id: %s player id: %s\n', lobbyId, id)
-            }
-
-            // remove the lobbyId if the lobby is empty
-            if (lobbies[lobbyId].players.length == 0) {
-                delete lobbies[lobbyId]
-                console.log('lobby removed\nlobby id: %s\n', lobbyId)
-            }
-            else if (lobbies[lobbyId].host.id == id) {
-                // else re assign the lobby host to the next player
-                lobbies[lobbyId].host = lobbies[lobbyId].players[0]
-                console.log('lobby host changed to new player\nlobby id: %s player id: %s\n', lobbyId, id)
-
-                // iterate through the current lobby players and emit the current lobby back to them
-                lobbies[lobbyId].players.forEach((player: PlayerType) => {
-                    io.to(player.id).emit('receive-lobby', {lobbyId: lobbyId, lobby: lobbies[lobbyId]})
-                });
-            }
-        }
-        else {
-            console.log('player tried to leave a nonexistent lobby\nlobby id: %s player id: %s\n', lobbyId, id)
-        }
+        console.log(`socket with user ID ${id} disconnected\n`);
+        // Your handling logic here...
     });
 
+    // Set an initial timeout for 10 seconds to disconnect the socket if no heartbeat is received
+    let disconnectTimeout: NodeJS.Timeout;
+
+    function startDisconnectTimeout() {
+        disconnectTimeout = setTimeout(() => {
+            console.log(`No heartbeat received in 10 seconds from user with ID: ${id}\n`);
+            leaveLobby(playerToLobby[id], id);
+        }, 10000);
+    }
+
+    // Start the initial timeout
+    startDisconnectTimeout();
+
+    // Update the remaining time and reset the timeout if a heartbeat is received
+    socket.on('heartbeat', () => {
+        console.log(`Received heartbeat from user with ID: ${id}\n`);
+
+        // Clear the existing timeout by setting it to null
+        clearTimeout(disconnectTimeout);
+
+        // Start the timeout with the remaining time
+        startDisconnectTimeout();
+    });
 
 })
 

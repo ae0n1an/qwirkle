@@ -64,19 +64,7 @@ export function PlayersProvider({ id, children } : {id: string, children: ReactN
     }
 
     function leaveLobby() {
-        console.log(socket)
         socket?.emit('leave-lobby', {lobbyId: lobbyId, playerId: id})
-
-        updateLobby({
-            lobbyId: "",
-            lobby: {
-                host: {
-                    id: "",
-                    name: "",
-                    avatar: ""
-                },
-                players: []
-            }})
     }
 
   return (
