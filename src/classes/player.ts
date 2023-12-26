@@ -3,11 +3,15 @@ import { Observer } from "./observer/observer"
 
 export class Player implements Observer {
     private name: string
+    private id: string
+    private avatar: string
     private tokens: Token[]
     private selected_token?: Token
     private score: number
 
-    constructor(initial_tokens: Token[], name: string) {
+    constructor(initial_tokens: Token[], name: string, id: string, avatar: string) {
+        this.id = id
+        this.avatar = avatar
         this.name = name
         this.tokens = initial_tokens
         for (const token of this.tokens) {
@@ -15,6 +19,10 @@ export class Player implements Observer {
         }
         this.selected_token = undefined
         this.score = 0
+    }
+
+    public getId(): string {
+        return this.id
     }
 
     public getScore(): number {

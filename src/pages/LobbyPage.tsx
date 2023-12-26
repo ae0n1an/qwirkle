@@ -11,14 +11,14 @@ import { usePlayers } from '../contexts/PlayersProvider';
 
 function LobbyPage() {
   //const [players, setPlayers] = useState<{nickname: string, avatar: string}[]>([]);
-  const { players, lobbyId, createLobby } = usePlayers()
+  const { players, lobbyId } = usePlayers()
 
   return (
     <div className="HostGame">
         <h2>Lobby Code: <strong>{lobbyId}</strong></h2>
         <PlayersLobbyDisplay players={players}/>
         <br></br>
-        <Link to="/game" style={{pointerEvents: players.length > 1 ? 'all' : 'none'}} state={{ players: players.map(p => p.name)}}>Start Game</Link>
+        <Link to="/game" style={{pointerEvents: players.length > 1 ? 'all' : 'none'}} state={{ players: players, isLocal:false}}>Start Game</Link>
         <br></br>
         or
         <br></br>

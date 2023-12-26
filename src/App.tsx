@@ -24,7 +24,7 @@ function App() {
           <Routes>
             <Route path='/' element={<Home nickname={nickname} setNickname={setNickname} avatar={avatar} setAvatar={setAvatar}/>}> </Route>
             <Route path='/lobby' element={<LobbyPage/>}> </Route>
-            <Route path='/game' element={<GamePage/>}> </Route>
+            <Route path='/game' element={<GamePage id={id}/>}> </Route>
             <Route path='/join' element={<JoinPage nickname={nickname} avatar={avatar}/>}> </Route>
           </Routes>
         </PlayersProvider>

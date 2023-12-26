@@ -10,7 +10,7 @@ import { v4 as uuidV4 } from 'uuid';
 import { usePlayers } from '../contexts/PlayersProvider';
 import { useSocket } from '../contexts/SocketProvider';
 
-const ROOM_ID_SIZE = 10;
+const LOCAL_PLAYERS = [{id: "", name: "player1", avatar: ""}, {id: "", name: "player2", avatar: ""}, {id: "", name: "player3", avatar: ""}, {id: "", name: "player4", avatar: ""}]
 
 function Home({nickname, setNickname, avatar, setAvatar}:{nickname: string, setNickname:any, avatar:string, setAvatar:any}) {
   const { createLobby, leaveLobby, lobbyId } = usePlayers();
@@ -58,7 +58,7 @@ function Home({nickname, setNickname, avatar, setAvatar}:{nickname: string, setN
           <br></br>
           or
           <br></br>
-          <Link to="/game" state={{players: ["p1", "p2", "p3", "p4"]}}>Play Game Locally with 4 players</Link>
+          <Link to="/game" state={{players: LOCAL_PLAYERS, isLocal:true}}>Play Game Locally with 4 players</Link>
     </div>
   );
 }

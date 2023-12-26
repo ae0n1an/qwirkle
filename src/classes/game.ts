@@ -7,8 +7,13 @@ import { PlaceAction } from "./placeAction";
 const COLORS = ["red", "blue", "green", "orange", "purple", "yellow"];
 const SHAPES = ["square", "circle", "triangle", "diamond", "four_point_star", "six_point_star"];
 const NUMBER_OF_EACH_TOKEN = 3;
-//const NUMBER_OF_PLAYERS = 3;
 const NUMBER_OF_TOKENS_PER_PLAYER = 6;
+
+type PlayerType = {
+    id: string,
+    name: string,
+    avatar: string
+}
 
 export class Game{
     private board: Board;
@@ -18,7 +23,7 @@ export class Game{
     private action_stack: PlaceAction[];
     private status_display: string;
 
-    constructor(players: string[]) {
+    constructor(players: PlayerType[]) {
         this.board = new Board();
         this.unplaced_tokens = [];
         this.generate_tokens();
@@ -27,6 +32,10 @@ export class Game{
         this.active_player = this.players[0];
         this.action_stack = [];
         this.status_display = this.active_player.getName() + "'s turn";
+    }
+
+    public getPlayerById(id: string) {
+        return this.players.filter((p) => p.getId() == id)[0];
     }
 
     public getPlayers() {
@@ -70,13 +79,13 @@ export class Game{
         }
     }
 
-    private generate_players(players: string[]) {
+    private generate_players(players: PlayerType[]) {
         for (let i = 0; i < players.length; i++) {
             let tokens: Token[] = []
             for (let j = 0; j < NUMBER_OF_TOKENS_PER_PLAYER; j++) {
                 tokens.push(this.unplaced_tokens.pop()!)
             }
-            this.players.push(new Player(tokens, players[i]))
+            this.players.push(new Player(tokens, players[i].name, players[i].id, players[i].avatar))
         }
     }
 
@@ -118,6 +127,10 @@ export class Game{
 
     private addTokenBack(token: Token) {
         this.unplaced_tokens.splice(Math.floor(Math.random()*this.unplaced_tokens.length), 0, token);
+    }
+
+    public isMyTurn(playerId: string) {
+        return this.active_player.getId() == playerId
     }
 
     public getBoard() {

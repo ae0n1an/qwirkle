@@ -13,37 +13,39 @@ import { Routes, Route } from 'react-router-dom';
 
 type DisplayGameProps = {
   game: Game;
+  isLocal: boolean;
+  playerId: string;
 }
 
 function DisplayGame(props: DisplayGameProps) {
-  const { game } = props;
+  const { game, isLocal, playerId } = props;
   const [board, setBoard] = useState({board: game.getBoard()});
-  const [player, setPlayer] = useState({player: game.getActivePlayer()});
+  const [player, setPlayer] = useState(isLocal ? {player: game.getActivePlayer()} : {player: game.getPlayerById(playerId)});
   const [status, setStatus] = useState({status: game.getStatus()});
 
   const undoClicked = () => {
     game.undoMove()
     setBoard({board: game.getBoard()})
-    setPlayer({player: game.getActivePlayer()})
+    setPlayer(isLocal ? {player: game.getActivePlayer()} : {player: game.getPlayerById(playerId)})
   };
 
   const undoAllClicked = () => {
     game.undoAllMoves()
     setBoard({board: game.getBoard()})
-    setPlayer({player: game.getActivePlayer()})
+    setPlayer(isLocal ? {player: game.getActivePlayer()} : {player: game.getPlayerById(playerId)})
   };
 
   const shuffleHand = () => {
     game.reshuffleHand()
     setBoard({board: game.getBoard()})
-    setPlayer({player: game.getActivePlayer()})
+    setPlayer(isLocal ? {player: game.getActivePlayer()} : {player: game.getPlayerById(playerId)})
     setStatus({status: game.getStatus()})
   };
 
   const confirmMove = () => {
     game.confirmTurn()
     setBoard({board: game.getBoard()})
-    setPlayer({player: game.getActivePlayer()})
+    setPlayer(isLocal ? {player: game.getActivePlayer()} : {player: game.getPlayerById(playerId)})
     setStatus({status: game.getStatus()})
   };
 
@@ -63,7 +65,7 @@ function DisplayGame(props: DisplayGameProps) {
             <div className="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
               <div className="mdl-grid">
                 <div className="mdl-cell mdl-cell--3-col mdl-cell--2-col-tablet mdl-cell--1-col-phone">
-                  <button className="mdl-button mdl-button--raised mdl-button--colored mdl-color--blue game_button" onClick={() => undoClicked()}>
+                  <button className="mdl-button mdl-button--raised mdl-button--colored mdl-color--blue game_button" disabled={!isLocal && !game.isMyTurn(playerId)} onClick={() => undoClicked()}>
                     <UndoIcon/>
                     <br></br>
                     <span>
@@ -72,7 +74,7 @@ function DisplayGame(props: DisplayGameProps) {
                   </button>
                 </div>
                 <div className="mdl-cell mdl-cell--3-col mdl-cell--2-col-tablet mdl-cell--1-col-phone">
-                  <button className="mdl-button mdl-button--raised mdl-button--colored mdl-color--purple game_button" onClick={() => shuffleHand()}>
+                  <button className="mdl-button mdl-button--raised mdl-button--colored mdl-color--purple game_button" disabled={!isLocal && !game.isMyTurn(playerId)} onClick={() => shuffleHand()}>
                     <RefreshIcon/>
                     <br></br>
                     <span>
@@ -81,7 +83,7 @@ function DisplayGame(props: DisplayGameProps) {
                   </button>
                 </div>
                 <div className="mdl-cell mdl-cell--3-col mdl-cell--2-col-tablet mdl-cell--1-col-phone">
-                  <button className="mdl-button mdl-button--raised mdl-button--colored mdl-color--red game_button" onClick={() => undoAllClicked()}>
+                  <button className="mdl-button mdl-button--raised mdl-button--colored mdl-color--red game_button" disabled={!isLocal && !game.isMyTurn(playerId)} onClick={() => undoAllClicked()}>
                     <ArrowDownwardIcon/>
                     <br></br>
                     <span>
@@ -90,7 +92,7 @@ function DisplayGame(props: DisplayGameProps) {
                   </button>
                 </div>
                 <div className="mdl-cell mdl-cell--3-col mdl-cell--2-col-tablet mdl-cell--1-col-phone">
-                  <button className="mdl-button mdl-button--raised mdl-button--colored mdl-color--green game_button" onClick={() => confirmMove()}>
+                  <button className="mdl-button mdl-button--raised mdl-button--colored mdl-color--green game_button" disabled={!isLocal && !game.isMyTurn(playerId)} onClick={() => confirmMove()}>
                     <DoneIcon/>
                     <br></br>
                     <span>
