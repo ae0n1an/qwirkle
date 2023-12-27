@@ -51,6 +51,26 @@ io.on('connection', (socket: any) => {
         }
     });
 
+    socket.on('start-game', ({playerId, game}: {playerId: string, game:any}) => {
+        console.log('game started\nlobby id: %s player id: %s\n', playerToLobby[playerId], playerId)
+
+        // iterate through the current players and emit the current game back to them
+        lobbies[playerToLobby[playerId]].players.forEach((player: PlayerType) => {
+            io.to(player.id).emit('game-started', {game: game})
+        });
+    });
+
+    socket.on('update-game', ({playerId, game}: {playerId: string, game:any}) => {
+        if (playerToLobby[playerId]) {
+            console.log('game updated\nlobby id: %s player id: %s\n', playerToLobby[playerId], playerId)
+            
+            // iterate through the current players and emit the current game back to them
+            lobbies[playerToLobby[playerId]].players.forEach((player: PlayerType) => {
+                io.to(player.id).emit('game-updated', {game: game})
+            });
+        }
+    });
+
     function leaveLobby(lobbyId: string, playerId:string) {
         if (lobbyId in lobbies) {
             // remove the players lobby
