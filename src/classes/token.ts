@@ -12,6 +12,23 @@ export class Token implements Subject{
       this.observers = []
     }
 
+    // Serialize the token object so that it can be sent via emit
+    public serialize(): Record<string, any> {
+      return {
+        colour: this.colour,
+        shape: this.shape,
+      };
+    }
+
+      // Deserialize a serialized token object and return a new Token instance
+    public static deserialize(data: Record<string, any>, player?:Observer): Token {
+      const token = new Token(data.colour, data.shape)
+      if (player) {
+        token.attach(player)
+      }
+      return token;
+    }
+
     public getColour() {
         return this.colour
     }

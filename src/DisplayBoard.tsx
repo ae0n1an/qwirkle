@@ -11,10 +11,12 @@ type PositionProps = {
   setBoard: React.Dispatch<React.SetStateAction<{board: Board;}>>;
   setPlayer: React.Dispatch<React.SetStateAction<{player: Player;}>>;
   game: Game;
+  playerById: boolean;
+  playerId: string
 }
 
 function DisplayBoard(props: PositionProps) {
-  const { board, setBoard, setPlayer, game } = props;
+  const { board, setBoard, setPlayer, game, playerById, playerId } = props;
   const postion_board = board.getTokenBoard()
   let board_height = postion_board[0].length
 
@@ -30,7 +32,7 @@ function DisplayBoard(props: PositionProps) {
       const handleClick = () => {
         pos.notify();
       };
-      renderedOutput.push(<DisplayPosition position={pos} highlighted={pos === board.getSelectedPosition()} setBoard={setBoard} setPlayer={setPlayer} game = {game} onClick = {handleClick}></DisplayPosition>)
+      renderedOutput.push(<DisplayPosition position={pos} highlighted={pos === board.getSelectedPosition()} playerById={playerById} playerId={playerId} setBoard={setBoard} setPlayer={setPlayer} game = {game} onClick = {handleClick}></DisplayPosition>)
     });
   });
 

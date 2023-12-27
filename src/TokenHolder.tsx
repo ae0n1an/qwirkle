@@ -11,11 +11,13 @@ type TokenHolderProps = {
   player: Player;
   setBoard: React.Dispatch<React.SetStateAction<{board: Board;}>>
   setPlayer: React.Dispatch<React.SetStateAction<{player: Player;}>>
-  game: Game
+  game: Game;
+  playerById: boolean;
+  playerId: string
 }
 
 function TokenHolder(props: TokenHolderProps) {
-  const { player, setBoard, setPlayer, game } = props;
+  const { player, setBoard, setPlayer, game, playerById, playerId } = props;
   const tokens = player.getTokens()
 
   const renderedOutput: JSX.Element[] = []
@@ -26,7 +28,7 @@ function TokenHolder(props: TokenHolderProps) {
     const handleClick = () => {
       token.notify();
     };
-    renderedOutput.push(<DisplayPosition position={position} highlighted={token === player.getSelectedToken()} setBoard={setBoard} setPlayer={setPlayer} game = {game} onClick = {handleClick}></DisplayPosition>)
+    renderedOutput.push(<DisplayPosition position={position} highlighted={token === player.getSelectedToken()} playerById={playerById} playerId={playerId} setBoard={setBoard} setPlayer={setPlayer} game = {game} onClick = {handleClick}></DisplayPosition>)
   });
 
   for (let i = 0; i < tokens.length; i++) { // add tokens to the token holder

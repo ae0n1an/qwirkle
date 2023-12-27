@@ -21,6 +21,28 @@ export class Player implements Observer {
         this.score = 0
     }
 
+    // Serialize the player object so that it can be sent via emit
+    public serialize(): Record<string, any> {
+        return {
+            name: this.name,
+            id: this.id,
+            avatar: this.avatar,
+            tokens: this.tokens.map(token => token.serialize()),
+            selected_token: this.selected_token ? this.selected_token.serialize() : null,
+            score: this.score,
+        };
+    }
+
+      // Deserialize a serialized player object and return a new Player instance
+    public static deserialize(data: Record<string, any>): Player {
+        const player = new Player([], data.name, data.id, data.avatar);
+        player.tokens = data.tokens.map((tokenData: Record<string, any>) => Token.deserialize(tokenData, player));
+        player.selected_token = undefined;
+        player.score = data.score;
+
+        return player;
+    }
+
     public getId(): string {
         return this.id
     }

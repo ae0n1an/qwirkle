@@ -58,7 +58,7 @@ function Home({nickname, setNickname, avatar, setAvatar}:{nickname: string, setN
           <br></br>
           or
           <br></br>
-          <Link to="/game" state={{players: LOCAL_PLAYERS, isLocal:true}}>Play Game Locally with 4 players</Link>
+          <Link to="/game" state={{game: new Game(LOCAL_PLAYERS).serialize(), isLocal:true}}>Play Game Locally with 4 players</Link>
     </div>
   );
 }

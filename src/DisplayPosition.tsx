@@ -14,17 +14,19 @@ type PositionProps = {
   setPlayer: React.Dispatch<React.SetStateAction<{player: Player;}>>;
   game: Game;
   onClick: () => void;
+  playerById: boolean;
+  playerId: string
 }
 
 function DisplayPosition(props: PositionProps) {
-  const { position, highlighted, setBoard, setPlayer, game, onClick} = props;
+  const { position, highlighted, setBoard, setPlayer, game, onClick, playerById, playerId} = props;
   const token = position.getToken();
 
   const handleClick = () => {
     onClick();
     game.update();
     setBoard({board: game.getBoard()})
-    setPlayer({player: game.getActivePlayer()})
+    setPlayer(playerById ? {player: game.getPlayerById(playerId)} : {player: game.getActivePlayer()})
   };
 
   if (token !== undefined) {

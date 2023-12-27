@@ -28,6 +28,38 @@ export class Board implements Observer{
         this.boardEmpty = true
     }
 
+    // Serialize the board object so that it can be sent via emit
+    public serialize(): Record<string, any> {
+        return {
+        tokenBoard: this.tokenBoard.map((grid, y) =>
+            grid.map((row, x) =>
+                row.map(position => position.serialize())
+            )
+        ),
+        selectedPosition: null, // no positions should be selected when the game is emitted
+        updatedPositions: [], // no positions should be updated when the game is emitted
+        boardEmpty: this.boardEmpty,
+        };
+    }
+
+    // Deserialize a serialized board object and return a new Board instance
+    public static deserialize(data: Record<string, any>): Board {
+        const board = new Board();
+        board.tokenBoard = data.tokenBoard.map((grid: any) =>
+        grid.map((row: any) =>
+            row.map((positionData: Record<string, any>) =>
+                Position.deserialize(positionData, board)
+            )
+        )
+        );
+        // You may need to implement deserialization for Position if needed
+        board.selectedPosition = undefined;
+        board.updatedPositions = [];
+        board.boardEmpty = data.boardEmpty;
+
+        return board;
+    }
+
     public addUpdatedPosition(position: Position) {
         this.updatedPositions.push(position)
     }

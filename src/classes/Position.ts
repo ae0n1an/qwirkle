@@ -13,6 +13,22 @@ export class Position implements Subject {
       this.observers = []
     }
 
+    // Serialize the position object so that it can be sent via emit
+    public serialize(): Record<string, any> {
+      return {
+        token: this.token ? this.token.serialize() : null
+      };
+    }
+
+      // Deserialize a serialized position object and return a new Position instance
+    public static deserialize(data: Record<string, any>, board: Observer): Position {
+      const position = new Position();
+      position.token = data.token ? Token.deserialize(data.token) : undefined;
+      position.attach(board)
+
+      return position;
+    }
+
     public addNeighbour(neighbour: Position) {
       this.neighbours.push(neighbour)
     }

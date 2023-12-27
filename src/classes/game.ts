@@ -31,7 +31,32 @@ export class Game{
         this.generate_players(players);
         this.active_player = this.players[0];
         this.action_stack = [];
-        this.status_display = this.active_player.getName() + "'s turn";
+        this.status_display = this.active_player ? this.active_player.getName() + "'s turn": ""
+    }
+
+    // serialize the game object so that it can be sent via emit
+    public serialize(): Record<string, any> {
+        return {
+            board: this.board.serialize(),
+            active_player_index: this.players.findIndex(player => player === this.active_player),
+            players: this.players.map(player => player.serialize()),
+            unplaced_tokens: this.unplaced_tokens.map(token => token.serialize()),
+            action_stack: [],
+            status_display: this.status_display,
+        };
+    }
+
+    // Deserialize a serialized game object and return a new Game instance
+    public static deserialize(data: Record<string, any>): Game {
+        const game = new Game([]);
+        game.players = data.players.map((playerData: Record<string, any>) => Player.deserialize(playerData));
+        game.active_player = game.players[data.active_player_index]
+        game.board = Board.deserialize(data.board);
+        game.unplaced_tokens = data.unplaced_tokens.map((tokenData: Record<string, any>) => Token.deserialize(tokenData));
+        game.action_stack = [];
+        game.status_display = data.status_display;
+
+        return game;
     }
 
     public getPlayerById(id: string) {
@@ -114,14 +139,16 @@ export class Game{
         this.nextPlayer()
     }
 
-    public confirmTurn() {
+    public confirmTurn(): boolean {
         let validate_board = this.board.validateBoard()
         if (validate_board[0]) {
             this.active_player.updateScore(validate_board[1])
             this.board.increaseBoard()
             this.nextPlayer()
+            return true
         } else {
             this.undoAllMoves()
+            return false
         }
     }
 
