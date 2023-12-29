@@ -1,4 +1,19 @@
-const io = require('socket.io')(5000, { origin: 'http://localhost:3000'})
+import { createServer } from "http";
+import { Server, Socket } from "socket.io";
+
+const httpServer = require('http').createServer();
+const io = new Server(httpServer, {
+    cors: {
+        origin: 'http://localhost:3000',
+        methods: ["GET", "POST"]
+    }
+});
+
+const PORT = process.env.PORT || 5000;
+
+httpServer.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server listening on port ${PORT}`);
+});
 
 type PlayerType = {
     id: string,
@@ -122,7 +137,7 @@ io.on('connection', (socket: any) => {
         console.log(`socket with user ID ${id} disconnected\n`);
         // Your handling logic here...
     });
-
+/*
     // Set an initial timeout for 10 seconds to disconnect the socket if no heartbeat is received
     let disconnectTimeout: NodeJS.Timeout;
 
@@ -146,6 +161,7 @@ io.on('connection', (socket: any) => {
         // Start the timeout with the remaining time
         startDisconnectTimeout();
     });
+*/
 
 })
 

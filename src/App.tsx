@@ -9,13 +9,11 @@ import { SocketProvider, useSocket } from './contexts/SocketProvider';
 import { PlayersProvider, usePlayers } from './contexts/PlayersProvider';
 import useLocalStorage from './hooks/useLocalStorage';
 import { v4 as uuidV4 } from 'uuid';
-import { useEffect } from 'react';
 
 function App() {
   const [id, setId] = useLocalStorage('id', uuidV4());
   const [nickname, setNickname] = useLocalStorage("userName", "");
   const [avatar, setAvatar] = useLocalStorage("avatar", "");
-  const {lobbyId} = usePlayers();
 
   return (
     <div className="app">
