@@ -32,12 +32,12 @@ export function usePlayers() {
 }
 
 export function PlayersProvider({ id, children } : {id: string, children: ReactNode}) {
-    const [players, setPlayers] = useLocalStorage('players', [])
+    const [players, setPlayers] = useState<PlayerType[]>([])
     const [isHost, setHost] = useState(false)
-    const [lobbyId, setLobbyId] = useLocalStorage('lobbyId', "")
+    const [lobbyId, setLobbyId] = useState<string>("")
     const socket = useSocket()
 
-    const updateLobby = useCallback(({lobbyId, lobby}: {lobbyId: String; lobby: {host: PlayerType, players:PlayerType[]}}) => {
+    const updateLobby = useCallback(({lobbyId, lobby}: {lobbyId: string; lobby: {host: PlayerType, players:PlayerType[]}}) => {
         setLobbyId(lobbyId);
         setPlayers(lobby.players)
         setHost(lobby.host.id == id)

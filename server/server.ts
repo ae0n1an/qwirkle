@@ -70,9 +70,11 @@ io.on('connection', (socket: any) => {
         console.log('game started\nlobby id: %s player id: %s\n', playerToLobby[playerId], playerId)
 
         // iterate through the current players and emit the current game back to them
-        lobbies[playerToLobby[playerId]].players.forEach((player: PlayerType) => {
-            io.to(player.id).emit('game-started', {game: game})
-        });
+        if (playerToLobby[playerId]) {
+            lobbies[playerToLobby[playerId]].players.forEach((player: PlayerType) => {
+                io.to(player.id).emit('game-started', {game: game})
+            });
+        }
     });
 
     socket.on('update-game', ({playerId, game}: {playerId: string, game:any}) => {
