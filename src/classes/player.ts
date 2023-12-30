@@ -51,6 +51,10 @@ export class Player implements Observer {
         return this.score
     }
 
+    public getAvatar(): string {
+        return this.avatar
+    }
+
     public updateScore(score:number) {
         this.score += score
     }

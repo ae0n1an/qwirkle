@@ -41,10 +41,13 @@ function Home({nickname, setNickname, avatar, setAvatar}:{nickname: string, setN
           <br></br>
           <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label has-placeholder">
               <select className="mdl-textfield__input" id="avatar" onChange={avatarUpdated} value={avatar}>
-                  <option className="" value="">Select Avatar</option>
-                  <option className="g" value="Green">Green</option>
-                  <option className="r" value="Red">Red</option>
-                  <option className="b" value="Blue">Blue</option>
+                  <option className="" value="">Select Color</option>
+                  <option className="g" value="#22B14C">Green</option>
+                  <option className="r" value="#ED1C24">Red</option>
+                  <option className="b" value="#00A2E8">Blue</option>
+                  <option className="o" value="#FF7F27">Orange</option>
+                  <option className="p" value="#A349A4">Purple</option>
+                  <option className="y" value="#FFF200">Yellow</option>
               </select>
           </div>
           <br></br>

@@ -15,7 +15,6 @@ function LobbyPage() {
   const { players, lobbyId, isHost} = usePlayers()
   const socket = useSocket()
   const navigate = useNavigate(); // Use the useNavigate hook here
-  const [isCopied, setIsCopied] = useState(false);
 
   useEffect(() => {
     if (socket == null) return
@@ -42,14 +41,6 @@ function LobbyPage() {
 
     // Remove the temporary textarea
     document.body.removeChild(textarea);
-
-    // Update state to show that the text has been copied
-    setIsCopied(true);
-
-    // Reset the 'Copied!' message after a certain duration (e.g., 2 seconds)
-    setTimeout(() => {
-      setIsCopied(false);
-    }, 2000);
   };
 
   return (

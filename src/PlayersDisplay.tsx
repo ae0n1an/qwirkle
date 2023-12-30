@@ -13,7 +13,7 @@ function PlayersDisplay(props: PlayerDisplayProps) {
   const renderedOutput: JSX.Element[] = []
 
   players.forEach((player) => {
-    renderedOutput.push(<DisplayPlayer name={player.getName()} score={player.getScore()}></DisplayPlayer>)
+    renderedOutput.push(<DisplayPlayer name={player.getName()} score={player.getScore()} color={player.getAvatar()}></DisplayPlayer>)
   });
 
   return (
