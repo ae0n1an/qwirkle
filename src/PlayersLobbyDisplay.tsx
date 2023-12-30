@@ -1,7 +1,5 @@
-import React, { useContext } from 'react';
-import { Player } from './classes/player';
-import CategoryIcon from '@mui/icons-material/Category';
-import DisplayPlayer from './DisplayPlayer';
+import React from 'react';
+import CloseIcon from '@mui/icons-material/Close';
 
 export interface IApplicationProps {
     players: {
@@ -9,12 +7,18 @@ export interface IApplicationProps {
         name: string,
         avatar: string
     }[];
+    isHost: boolean
 }
 
 const PlayersLobbyDisplay: React.FunctionComponent<IApplicationProps> = (props) => {
-    const { players } = props;
+    const { players, isHost } = props;
 
     const renderedOutput: JSX.Element[] = []
+
+    const handleKickClick = () => {
+        // Create a temporary textarea to copy the text
+        console.log("kick")
+      };
 
     players.forEach((player, index) => {
         renderedOutput.push(<div className="mdl-list__item" key={index}>
@@ -22,7 +26,8 @@ const PlayersLobbyDisplay: React.FunctionComponent<IApplicationProps> = (props) 
             <i className="material-icons mdl-list__item-avatar">person</i>
             <span>{player.name}</span>
         </span>
-        <div className="mdl-list__item-secondary-action">{player.avatar}</div>
+        {index === 0 ? <div className="mdl-list__item-secondary-action">Host</div> : 
+            (isHost ? <div className="mdl-list__item-secondary-action"><button title="Kick" className="mdl-button mdl-js-button mdl-button--icon" onClick={handleKickClick}><CloseIcon/></button></div> : <></>)}
     </div>)
     });
 

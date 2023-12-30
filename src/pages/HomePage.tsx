@@ -1,12 +1,9 @@
 import React from 'react';
 import '../App.css';
 import { Game } from "../classes/game";
-import { Routes, Route} from 'react-router-dom';
-import DisplayGame from '../DisplayGame';
+import { useLocation} from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import {useEffect, useState} from 'react';
-import useLocalStorage from '../hooks/useLocalStorage';
-import { v4 as uuidV4 } from 'uuid';
 import { usePlayers } from '../contexts/PlayersProvider';
 import { useSocket } from '../contexts/SocketProvider';
 
@@ -14,6 +11,7 @@ const LOCAL_PLAYERS = [{id: "", name: "player1", avatar: ""}, {id: "", name: "pl
 
 function Home({nickname, setNickname, avatar, setAvatar}:{nickname: string, setNickname:any, avatar:string, setAvatar:any}) {
   const { createLobby, leaveLobby, lobbyId } = usePlayers();
+  const [errorMessage, setErrorMessage] = useState("")
   const socket = useSocket();
 
   // when the socket is updated try to leave the lobby
@@ -59,6 +57,9 @@ function Home({nickname, setNickname, avatar, setAvatar}:{nickname: string, setN
           or
           <br></br>
           <Link to="/game" state={{game: new Game(LOCAL_PLAYERS).serialize(), isLocal:true}}>Play Game Locally with 4 players</Link>
+          <br></br>
+          <br></br>
+          <p  className="error"><b>{errorMessage}</b></p>
     </div>
   );
 }
