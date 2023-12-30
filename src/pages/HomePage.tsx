@@ -8,8 +8,9 @@ import { useSocket } from '../contexts/SocketProvider';
 const LOCAL_PLAYERS = [{id: "", name: "player1", avatar: ""}, {id: "", name: "player2", avatar: ""}, {id: "", name: "player3", avatar: ""}, {id: "", name: "player4", avatar: ""}]
 
 function Home({nickname, setNickname, avatar, setAvatar}:{nickname: string, setNickname:any, avatar:string, setAvatar:any}) {
-  const { createLobby, leaveLobby, lobbyId } = usePlayers();
+  const { createLobby, joinLobby, leaveLobby, lobbyId } = usePlayers();
   const [errorMessage, setErrorMessage] = useState("")
+  const [room, setRoom] = useState("");
   const socket = useSocket();
 
   // when the socket is updated try to leave the lobby
@@ -27,8 +28,16 @@ function Home({nickname, setNickname, avatar, setAvatar}:{nickname: string, setN
     setAvatar((document.getElementById('avatar') as HTMLInputElement).value)
   };
 
+  const roomUpdated = () => {
+    setRoom((document.getElementById('gameCode') as HTMLInputElement).value)
+  };
+
   function handleHostLobby() {
     createLobby(nickname, avatar)
+  };
+
+  function handleJoinLobby() {
+    joinLobby(room, nickname, avatar)
   };
 
   return (
@@ -50,13 +59,13 @@ function Home({nickname, setNickname, avatar, setAvatar}:{nickname: string, setN
           </div>
           <br></br>
           <Link to="/lobby" style={{pointerEvents: (avatar !== "" && nickname !== "") ? 'all' : 'none'}} onClick={handleHostLobby}>Host Game</Link>
+          <hr></hr>
+          <div className="mdl-textfield mdl-js-textfield">
+            <input className="mdl-textfield__input" type="text" placeholder= "Enter Lobby Code..." id="gameCode" onChange={roomUpdated}></input>
+          </div>
           <br></br>
-          or
-          <br></br>
-          <Link to="/join" style={{pointerEvents: (avatar !== "" && nickname !== "") ? 'all' : 'none'}}>Join a Game</Link>
-          <br></br>
-          or
-          <br></br>
+          <Link to="/lobby" style={{pointerEvents: avatar !== "" && nickname !== "" && room !== "" ? 'all' : 'none'}} onClick={handleJoinLobby}>Join Game</Link>
+          <hr></hr>
           <Link to="/game" state={{game: new Game(LOCAL_PLAYERS).serialize(), isLocal:true}}>Play Game Locally with 4 players</Link>
           <br></br>
           <br></br>

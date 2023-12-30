@@ -3,7 +3,6 @@ import { Routes, Route } from 'react-router-dom';
 import GamePage from './pages/GamePage';
 import LobbyPage from './pages/LobbyPage';
 import Home from './pages/HomePage';
-import JoinPage from './pages/JoinPage';
 import { SocketProvider } from './contexts/SocketProvider';
 import { PlayersProvider } from './contexts/PlayersProvider';
 import useLocalStorage from './hooks/useLocalStorage';
@@ -22,7 +21,6 @@ function App() {
             <Route path='/' element={<Home nickname={nickname} setNickname={setNickname} avatar={avatar} setAvatar={setAvatar}/>}> </Route>
             <Route path='/lobby' element={<LobbyPage/>}> </Route>
             <Route path='/game' element={<GamePage id={id}/>}> </Route>
-            <Route path='/join' element={<JoinPage nickname={nickname} avatar={avatar}/>}> </Route>
           </Routes>
         </PlayersProvider>
       </SocketProvider>
