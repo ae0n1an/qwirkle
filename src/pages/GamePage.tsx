@@ -10,7 +10,7 @@ function GamePage({id}:{id: string}) {
   const location = useLocation()
   const { isHost } = usePlayers()
   const { isLocal, game } = location.state
-  const [serializedGame, setSerializedGame] = useState(game)
+  const [serializedGame, setSerializedGame] = useState(Game.deserialize(game))
   const socket = useSocket()
 
   useEffect(() => {
@@ -24,7 +24,15 @@ function GamePage({id}:{id: string}) {
     if (socket == null) return
 
     const gameUpdated = ({ game }: { game: any }) => {
-      setSerializedGame(game)
+      // Set the players hand to their current hand on their screen so that swapped tokens stay
+      // in their current location 
+      setSerializedGame((prevState: Game) => {
+        game.players[game.players.findIndex((p: any) => p.id === id)].tokens = (prevState.getPlayerById(id).getTokens().map(token => ({
+          colour: token.getColour(),
+          shape: token.getShape()
+        })))
+        return Game.deserialize(game);
+      });
     };
 
     socket.on('game-updated', gameUpdated)
@@ -34,7 +42,7 @@ function GamePage({id}:{id: string}) {
 
   return (
       <>
-        <DisplayGame game = {Game.deserialize(serializedGame)} isLocal = {isLocal} playerId = {id}></DisplayGame>
+        <DisplayGame game = {serializedGame} isLocal = {isLocal} playerId = {id}></DisplayGame>
       </>
   );
 }
