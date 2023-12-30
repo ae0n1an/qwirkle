@@ -1,7 +1,5 @@
 import { Position } from "./position";
 import { Observer } from "./observer/observer";
-import { Subject } from "./observer/subject";
-import { Game } from "./game";
 
 const INITIAL_BOARD_SIZE = 6;
 

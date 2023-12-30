@@ -1,7 +1,5 @@
-import React from 'react';
 import '../App.css';
 import { Game } from "../classes/game";
-import { useLocation} from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import {useEffect, useState} from 'react';
 import { usePlayers } from '../contexts/PlayersProvider';

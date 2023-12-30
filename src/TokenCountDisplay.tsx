@@ -1,7 +1,3 @@
-import React from 'react'
-import { Token } from './classes/token';
-import CategoryIcon from '@mui/icons-material/Category';
-
 type TokenCountDisplayProps = {
   tokenCount: number;
 }

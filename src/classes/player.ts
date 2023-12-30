@@ -79,7 +79,6 @@ export class Player implements Observer {
             let first_token = this.selected_token
             let first_token_index = this.removeSelectedToken()
             this.selected_token = subject
-            let second_token = this.selected_token
             let second_token_index = this.removeSelectedToken()
             this.insertToken(second_token_index, first_token)
             this.insertToken(first_token_index, subject)

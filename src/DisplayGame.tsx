@@ -9,7 +9,6 @@ import UndoIcon from '@mui/icons-material/Undo';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import TokenCountDisplay from './TokenCountDisplay';
 import PlayersDisplay from './PlayersDisplay';
-import { Routes, Route } from 'react-router-dom';
 import { useSocket } from './contexts/SocketProvider';
 
 type DisplayGameProps = {

@@ -1,12 +1,9 @@
 import '../App.css';
 import { Game } from "../classes/game";
-import DisplayGame from '../DisplayGame';
-import { Link, Navigate } from 'react-router-dom';
-import {useCallback, useEffect, useState} from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PlayersLobbyDisplay from '../PlayersLobbyDisplay';
-import * as io from "socket.io-client";
-import useLocalStorage from '../hooks/useLocalStorage';
 import { usePlayers } from '../contexts/PlayersProvider';
 import { useSocket } from '../contexts/SocketProvider';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';

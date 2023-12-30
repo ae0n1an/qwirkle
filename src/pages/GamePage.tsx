@@ -1,5 +1,5 @@
 import '../App.css';
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useState} from 'react';
 import { Game } from '../classes/game';
 import DisplayGame from '../DisplayGame';
 import { useLocation } from 'react-router-dom'

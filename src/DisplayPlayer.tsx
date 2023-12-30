@@ -1,7 +1,3 @@
-import React from 'react'
-import { Player } from './classes/player';
-import CategoryIcon from '@mui/icons-material/Category';
-
 type PlayersDisplayProps = {
   name: string;
   score: number;

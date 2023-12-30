@@ -1,7 +1,4 @@
 import '../App.css';
-import { Game } from "../classes/game";
-import { Routes, Route, useLocation } from 'react-router-dom';
-import DisplayGame from '../DisplayGame';
 import { Link } from 'react-router-dom';
 import {useEffect, useState} from 'react';
 import { usePlayers } from '../contexts/PlayersProvider';

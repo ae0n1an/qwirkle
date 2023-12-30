@@ -1,17 +1,16 @@
 import './App.css';
-import { Game } from "./classes/game";
 import { Routes, Route } from 'react-router-dom';
 import GamePage from './pages/GamePage';
 import LobbyPage from './pages/LobbyPage';
 import Home from './pages/HomePage';
 import JoinPage from './pages/JoinPage';
-import { SocketProvider, useSocket } from './contexts/SocketProvider';
-import { PlayersProvider, usePlayers } from './contexts/PlayersProvider';
+import { SocketProvider } from './contexts/SocketProvider';
+import { PlayersProvider } from './contexts/PlayersProvider';
 import useLocalStorage from './hooks/useLocalStorage';
 import { v4 as uuidV4 } from 'uuid';
 
 function App() {
-  const [id, setId] = useLocalStorage('id', uuidV4());
+  const [id] = useLocalStorage('id', uuidV4());
   const [nickname, setNickname] = useLocalStorage("userName", "");
   const [avatar, setAvatar] = useLocalStorage("avatar", "");
 

@@ -1,4 +1,3 @@
-import React from 'react'
 import { Token } from './classes/token';
 
 type TokenProps = {

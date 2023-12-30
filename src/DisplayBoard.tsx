@@ -1,7 +1,5 @@
 import './App.css';
-import {useEffect, useState} from 'react';
 import DisplayPosition from "./DisplayPosition";
-import { Position } from "./classes/position";
 import { Board } from './classes/board';
 import { Player } from './classes/player';
 import { Game } from './classes/game';

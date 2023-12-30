@@ -1,5 +1,4 @@
 import React, { ReactNode, useCallback, useContext, useEffect, useState } from 'react'
-import useLocalStorage from '../hooks/useLocalStorage'
 import { useSocket } from './SocketProvider'
 import { v4 as uuidV4 } from 'uuid';
 
@@ -40,8 +39,8 @@ export function PlayersProvider({ id, children } : {id: string, children: ReactN
     const updateLobby = useCallback(({lobbyId, lobby}: {lobbyId: string; lobby: {host: PlayerType, players:PlayerType[]}}) => {
         setLobbyId(lobbyId);
         setPlayers(lobby.players)
-        setHost(lobby.host.id == id)
-    }, [setPlayers])
+        setHost(lobby.host.id === id)
+    }, [setPlayers, id])
 
     useEffect(() => {
         if (socket == null) return

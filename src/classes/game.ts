@@ -1,7 +1,6 @@
 import { Board } from "./board";
 import { Player } from "./player";
 import { Token } from "./token";
-import { Subject } from "./observer/subject";
 import { PlaceAction } from "./placeAction";
 
 const COLORS = ["red", "blue", "green", "orange", "purple", "yellow"];
@@ -60,7 +59,7 @@ export class Game{
     }
 
     public getPlayerById(id: string) {
-        return this.players.filter((p) => p.getId() == id)[0];
+        return this.players.filter((p) => p.getId() === id)[0];
     }
 
     public getPlayers() {
@@ -157,7 +156,7 @@ export class Game{
     }
 
     public isMyTurn(playerId: string) {
-        return this.active_player.getId() == playerId
+        return this.active_player.getId() === playerId
     }
 
     public getBoard() {

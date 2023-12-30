@@ -1,6 +1,4 @@
 import React from "react";
-import {useEffect, useState} from 'react';
-import { Token } from "./classes/token";
 import { Position } from "./classes/position";
 import DisplayPosition from "./DisplayPosition";
 import { Player } from "./classes/player";
