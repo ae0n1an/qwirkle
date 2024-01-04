@@ -28,17 +28,6 @@ io.on('connection', (socket: any) => {
     const id = socket.handshake.query.id
     socket.join(id) // static id that remains even after reloading the page
 
-    socket.on('send-message', ({recipients, text} : {recipients: string[], text: string}) => {
-        recipients.forEach((recipiant: any) => {
-            // filter out the current recipient from the recipients
-            const newRecipiants = recipients.filter((r: any) => r !== recipiant)
-            newRecipiants.push(id)
-            socket.broadcast.to(recipiant).emit('receive-message', {
-                recipiants: newRecipiants, sender: id, text
-            })
-        });
-    })
-
     socket.on('create-lobby', ({lobbyId, player} : {lobbyId: string, player: PlayerType}) => {
         lobbies[lobbyId] = {host: player, players: [player]}
         playerToLobby[player.id] = lobbyId
@@ -50,7 +39,7 @@ io.on('connection', (socket: any) => {
         if (lobbyId in lobbies) {
             // add the newly joined player to the lobby
             lobbies[lobbyId].players = [...lobbies[lobbyId].players, newPlayer]
-            playerToLobby[newPlayer.id] = lobbyId
+            playerToLobby[newPlayer.id] = lobbyId 
 
             // iterate through the current players and emit the current lobby back to them
             lobbies[lobbyId].players.forEach((player: PlayerType) => {
@@ -63,6 +52,22 @@ io.on('connection', (socket: any) => {
         }
         else {
             console.log('player tried to join nonexistent lobby\nlobby id: %s player id: %s\n', lobbyId, newPlayer.id)
+        }
+    });
+
+    socket.on('rejoin-lobby', ({lobbyId, playerId} : {lobbyId: string, playerId: string}) => {
+        if (lobbyId in lobbies) {
+            if (playerId in lobbies[lobbyId].players) {
+                io.to(playerId).emit('receive-lobby', {lobbyId: lobbyId, lobby: lobbies[lobbyId]})
+                console.log('player sent back to lobby\nlobby id: %s player id: %s\n', lobbyId, playerId)
+            }
+            else {
+                console.log('player tried to rejoin lobby it is not part of\nlobby id: %s player id: %s\n', lobbyId, playerId)
+            }
+
+        }
+        else {
+            console.log('player tried to rejoin nonexistent lobby\nlobby id: %s player id: %s\n', lobbyId, playerId)
         }
     });
 
@@ -88,7 +93,7 @@ io.on('connection', (socket: any) => {
         }
     });
 
-    function leaveLobby(lobbyId: string, playerId:string) {
+    function leaveGame(lobbyId: string, playerId:string) {
         if (lobbyId in lobbies) {
             // remove the players lobby
             delete playerToLobby[playerId]
@@ -118,20 +123,17 @@ io.on('connection', (socket: any) => {
                 });
             }
 
-            // send the disconnected player back an empty lobby
+            // send the disconnected player back to the homepage
             console.log('kicked player sent back empty lobby\nplayer id: %s\n', playerId)
-            io.to(playerId).emit('receive-lobby', {lobbyId: "None", lobby: {
-                host: {id: "", name: "", avatar: ""},
-                players: []
-            }})
+            io.to(playerId).emit('disconnected-from-game')
         }
         else {
             console.log('player tried to leave a nonexistent lobby\nlobby id: %s player id: %s\n', lobbyId, playerId)
         }
     }
 
-    socket.on('leave-lobby', ({lobbyId, playerId}: {lobbyId: string, playerId: string}) => {
-        leaveLobby(lobbyId, playerId)
+    socket.on('leave-game', ({lobbyId, playerId}: {lobbyId: string, playerId: string}) => {
+        leaveGame(lobbyId, playerId)
     });
 
     // Handle disconnect event
@@ -139,15 +141,15 @@ io.on('connection', (socket: any) => {
         console.log(`socket with user ID ${id} disconnected\n`);
         // Your handling logic here...
     });
-/*
-    // Set an initial timeout for 10 seconds to disconnect the socket if no heartbeat is received
+
+    // Set an initial timeout for 30 seconds to disconnect the socket if no heartbeat is received
     let disconnectTimeout: NodeJS.Timeout;
 
     function startDisconnectTimeout() {
         disconnectTimeout = setTimeout(() => {
-            console.log(`No heartbeat received in 10 seconds from user with ID: ${id}\n`);
-            leaveLobby(playerToLobby[id], id);
-        }, 10000);
+            console.log(`No heartbeat received in 30 seconds from user with ID: ${id}\n`);
+            leaveGame(playerToLobby[id], id);
+        }, 30000);
     }
 
     // Start the initial timeout
@@ -157,13 +159,14 @@ io.on('connection', (socket: any) => {
     socket.on('heartbeat', () => {
         console.log(`Received heartbeat from user with ID: ${id}\n`);
 
+        io.to(id).emit('heartbeat-recieved')
+
         // Clear the existing timeout by setting it to null
         clearTimeout(disconnectTimeout);
 
         // Start the timeout with the remaining time
         startDisconnectTimeout();
     });
-*/
 
 })
 
