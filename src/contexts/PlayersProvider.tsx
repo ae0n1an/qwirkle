@@ -1,6 +1,8 @@
 import React, { ReactNode, useCallback, useContext, useEffect, useState } from 'react'
 import { useSocket } from './SocketProvider'
 import { v4 as uuidV4 } from 'uuid';
+import useLocalStorage from '../hooks/useLocalStorage';
+import { useNavigate } from 'react-router-dom';
 
 type PlayersContextType = {
     lobbyId: string,
@@ -20,7 +22,7 @@ const PlayersContext = React.createContext<PlayersContextType>({
     leaveLobby: () => {}
 })
 
-type PlayerType = {
+export type PlayerType = {
     id: string,
     name: string,
     avatar: string
@@ -31,15 +33,14 @@ export function usePlayers() {
 }
 
 export function PlayersProvider({ id, children } : {id: string, children: ReactNode}) {
-    const [players, setPlayers] = useState<PlayerType[]>([])
-    const [isHost, setHost] = useState(false)
-    const [lobbyId, setLobbyId] = useState<string>("")
+    const [players, setPlayers] = useLocalStorage("players", [])
+    const [lobbyId, setLobbyId] = useLocalStorage("lobbyId", "")
     const socket = useSocket()
+    const navigate = useNavigate(); // Use the useNavigate hook here
 
     const updateLobby = useCallback(({lobbyId, lobby}: {lobbyId: string; lobby: {host: PlayerType, players:PlayerType[]}}) => {
         setLobbyId(lobbyId);
         setPlayers(lobby.players)
-        setHost(lobby.host.id === id)
     }, [setPlayers, id])
 
     useEffect(() => {
@@ -49,6 +50,20 @@ export function PlayersProvider({ id, children } : {id: string, children: ReactN
 
         return () => { socket.off('receive-lobby') }
     }, [socket, updateLobby])
+
+    useEffect(() => {
+        if (socket == null) return
+    
+        const disconnectedFromGame = () => {
+            leaveLobby()
+            navigate('/', { state: { errorMessage: "Disconnected from game"} });
+        };
+    
+        socket.on('disconnected-from-game', disconnectedFromGame)
+    
+        return () => { socket.off('disconnected-from-lobby') }
+      }, [socket])
+    
 
     function joinLobby(providedLobbyId: string, name: string, avatar:string) {
         socket?.emit('join-lobby', { lobbyId: providedLobbyId, newPlayer: {id:id, name:name, avatar:avatar}})
@@ -60,11 +75,11 @@ export function PlayersProvider({ id, children } : {id: string, children: ReactN
     }
 
     function leaveLobby() {
-        socket?.emit('leave-lobby', {lobbyId: lobbyId, playerId: id})
+        socket?.emit('leave-game', {lobbyId: lobbyId, playerId: id})
     }
 
-  return (
-        <PlayersContext.Provider value={{ players, lobbyId, isHost, createLobby, joinLobby, leaveLobby}}>
+    return (
+        <PlayersContext.Provider value={{ players, lobbyId, isHost : players.length > 0 && id === players[0].id , createLobby, joinLobby, leaveLobby}}>
             {children}
         </PlayersContext.Provider>
     )

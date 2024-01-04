@@ -7,24 +7,13 @@ import PlayersLobbyDisplay from '../PlayersLobbyDisplay';
 import { usePlayers } from '../contexts/PlayersProvider';
 import { useSocket } from '../contexts/SocketProvider';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { useGame } from '../contexts/GameProvider';
 
 function LobbyPage() {
-  const { players, lobbyId, isHost} = usePlayers()
+  const { players, lobbyId, isHost } = usePlayers()
+  const { startGame } = useGame()
   const socket = useSocket()
   const navigate = useNavigate(); // Use the useNavigate hook here
-
-  useEffect(() => {
-    if (socket == null) return
-
-    const gameStarted = ({ game }: { game: any }) => {
-      navigate('/game', { state: { isLocal: false, game } });
-    };
-
-    socket.on('game-started', gameStarted)
-
-    return () => { socket.off('game-started') }
-  }, [socket])
-
 
   const handleCopyClick = () => {
     // Create a temporary textarea to copy the text
@@ -40,6 +29,11 @@ function LobbyPage() {
     document.body.removeChild(textarea);
   };
 
+  const handleStartGame = (e: any) => {
+    e.preventDefault()
+    startGame(players)
+  };
+
   return (
     <div className="HostGame">
         <h3>Lobby Code:</h3>
@@ -51,7 +45,7 @@ function LobbyPage() {
         </h3>
         <PlayersLobbyDisplay players={players} isHost={isHost}/>
         <br></br>
-        {isHost ? <><Link to="/game" style={{pointerEvents: players.length > 1 ? 'all' : 'none'}} state={{ players: players, isLocal:false, game: new Game(players).serialize()}}>Start Game</Link> <br></br>or<br></br></> : <></>}
+        {isHost ? <><Link to="/game" onClick={handleStartGame} style={{pointerEvents: players.length > 1 ? 'all' : 'none'}}>Start Game</Link> <br></br>or<br></br></> : <></>}
         <Link to="/">Go Back</Link>
     </div>
   );

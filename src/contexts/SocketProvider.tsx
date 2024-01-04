@@ -20,10 +20,11 @@ export const SocketContext = React.createContext<Socket| undefined>(
 
 export function SocketProvider({ id, children } : {id: string, children: ReactNode}) {
     const [socket, setSocket] = useState<Socket>()
-
+    
+    //https://qworkle-server.onrender.com
     useEffect(() => {
         const newSocket = io(
-            'https://qworkle-server.onrender.com', 
+            'http://localhost:5000', 
             { 
                 query: { id },
                 transports : ['websocket']
@@ -40,13 +41,25 @@ export function SocketProvider({ id, children } : {id: string, children: ReactNo
         if (socket) {
           socket.emit('heartbeat');
         }
-      }, 5000); // Adjust the interval as needed (e.g., every 5 seconds)
+      }, 10000); // send every 10 seconds
   
       // Clean up the interval when the socket is closed or component unmounts
       return () => {
         clearInterval(heartbeatInterval);
       };
     }, [socket]);
+
+    /*
+
+    useEffect(() => {
+      if (socket == null) return
+
+      socket.on('heartbeat-recieved', updateLobby)
+
+      return () => { socket.off('heartbeat-recieved') }
+    }, [socket, updateLobby])
+
+    */
 
     return (
         <SocketContext.Provider value={socket}>

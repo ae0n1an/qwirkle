@@ -1,17 +1,22 @@
 import '../App.css';
 import { Game } from "../classes/game";
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {useEffect, useState} from 'react';
 import { usePlayers } from '../contexts/PlayersProvider';
 import { useSocket } from '../contexts/SocketProvider';
+import { useGame } from '../contexts/GameProvider';
 
-const LOCAL_PLAYERS = [{id: "", name: "player1", avatar: ""}, {id: "", name: "player2", avatar: ""}, {id: "", name: "player3", avatar: ""}, {id: "", name: "player4", avatar: ""}]
+const LOCAL_PLAYERS = [{id: "", name: "Green", avatar: "#22B14C"}, {id: "", name: "Red", avatar: "#ED1C24"}, {id: "", name: "Blue", avatar: "#00A2E8"}, {id: "", name: "Orange", avatar: "#FF7F27"}]
+// {id: "", name: "Purple", avatar: "#A349A4"}, {id: "", name: "Yellow", avatar: "#FFF200"}]
 
 function Home({nickname, setNickname, avatar, setAvatar}:{nickname: string, setNickname:any, avatar:string, setAvatar:any}) {
   const { createLobby, joinLobby, leaveLobby, lobbyId } = usePlayers();
-  const [errorMessage, setErrorMessage] = useState("")
+  const location = useLocation();
+  const [errorMessage, setErrorMessage] = useState(location.state?.errorMessage||"")
   const [room, setRoom] = useState("");
   const socket = useSocket();
+  const { startGame } = useGame()
+  const navigate = useNavigate(); // Use the useNavigate hook here
 
   // when the socket is updated try to leave the lobby
   useEffect(() => {
@@ -32,12 +37,17 @@ function Home({nickname, setNickname, avatar, setAvatar}:{nickname: string, setN
     setRoom((document.getElementById('gameCode') as HTMLInputElement).value)
   };
 
+  function handleJoinLobby() {
+    joinLobby(room, nickname, avatar)
+  };
+
   function handleHostLobby() {
     createLobby(nickname, avatar)
   };
 
-  function handleJoinLobby() {
-    joinLobby(room, nickname, avatar)
+  const handleStartGame = (e: any) => {
+    e.preventDefault()
+    startGame([]) // starting game with empty players will use pre definied players for the game
   };
 
   return (
@@ -66,10 +76,10 @@ function Home({nickname, setNickname, avatar, setAvatar}:{nickname: string, setN
           <br></br>
           <Link to="/lobby" style={{pointerEvents: avatar !== "" && nickname !== "" && room !== "" ? 'all' : 'none'}} onClick={handleJoinLobby}>Join Game</Link>
           <hr></hr>
-          <Link to="/game" state={{game: new Game(LOCAL_PLAYERS).serialize(), isLocal:true}}>Play Game Locally with 4 players</Link>
+          <Link to="/game" onClick={handleStartGame}>Play Game Locally with 4 players</Link>
           <br></br>
           <br></br>
-          <p  className="error"><b>{errorMessage}</b></p>
+          <p className="error"><b>{errorMessage}</b></p>
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { SocketProvider } from './contexts/SocketProvider';
 import { PlayersProvider } from './contexts/PlayersProvider';
 import useLocalStorage from './hooks/useLocalStorage';
 import { v4 as uuidV4 } from 'uuid';
+import { GameProvider } from './contexts/GameProvider';
 
 function App() {
   const [id] = useLocalStorage('id', uuidV4());
@@ -16,13 +17,15 @@ function App() {
   return (
     <div className="app">
       <SocketProvider id={id}>
-        <PlayersProvider id={id}>
-          <Routes>
-            <Route path='/' element={<Home nickname={nickname} setNickname={setNickname} avatar={avatar} setAvatar={setAvatar}/>}> </Route>
-            <Route path='/lobby' element={<LobbyPage/>}> </Route>
-            <Route path='/game' element={<GamePage id={id}/>}> </Route>
-          </Routes>
-        </PlayersProvider>
+        <GameProvider id={id}>
+          <PlayersProvider id={id}>
+            <Routes>
+              <Route path='/' element={<Home nickname={nickname} setNickname={setNickname} avatar={avatar} setAvatar={setAvatar}/>}> </Route>
+              <Route path='/lobby' element={<LobbyPage/>}> </Route>
+              <Route path='/game' element={<GamePage id={id}/>}> </Route>
+            </Routes>
+          </PlayersProvider>
+        </GameProvider>
       </SocketProvider>
     </div>
   );
