@@ -1,6 +1,6 @@
-import { Observer } from "./observer/observer";
-import { Subject } from "./observer/subject";
-import { Token } from "./token";
+import { Observer } from "./classes/observer/observer";
+import { Subject } from "./classes/observer/subject";
+import { Token } from "./classes/token";
 
 export class Position implements Subject {
     private token?: Token;

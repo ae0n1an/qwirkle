@@ -1,6 +1,6 @@
 import React from 'react'
 import DisplayToken from './DisplayToken';
-import { Position } from './classes/position';
+import { Position } from './position';
 import { Game } from './classes/game';
 import { Board } from './classes/board';
 import { Player } from './classes/player';

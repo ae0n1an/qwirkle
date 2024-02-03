@@ -21,10 +21,9 @@ export const SocketContext = React.createContext<Socket| undefined>(
 export function SocketProvider({ id, children } : {id: string, children: ReactNode}) {
     const [socket, setSocket] = useState<Socket>()
     
-    //https://qworkle-server.onrender.com
     useEffect(() => {
         const newSocket = io(
-            'http://localhost:5000', 
+            'https://qworkle-server.onrender.com', 
             { 
                 query: { id },
                 transports : ['websocket']
