@@ -1,5 +1,5 @@
 import React from "react";
-import { Position } from "./position";
+import { Position } from "./classes/position";
 import DisplayPosition from "./DisplayPosition";
 import { Player } from "./classes/player";
 import { Board } from "./classes/board";

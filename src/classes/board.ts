@@ -1,4 +1,4 @@
-import { Position } from "../position";
+import { Position } from "./position";
 import { Observer } from "./observer/observer";
 
 const INITIAL_BOARD_SIZE = 6;

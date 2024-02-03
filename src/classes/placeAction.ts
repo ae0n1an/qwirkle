@@ -1,6 +1,6 @@
 import { Board } from "./board";
 import { Token } from "./token";
-import { Position } from "../position";
+import { Position } from "./position";
 import { Player } from "./player";
 
 export class PlaceAction {
