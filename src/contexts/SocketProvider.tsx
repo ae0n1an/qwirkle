@@ -51,15 +51,15 @@ export function SocketProvider({ id, children } : {id: string, children: ReactNo
     useEffect(() => {
       if (socket == null) return;
     
-      // Set up the listener for the 'heartbeat-received' event
-      socket.on('heartbeat-received', () => {
+      // Set up the listener for the 'heartbeat-recieved' event
+      socket.on('heartbeat-recieved', () => {
         console.log('Heartbeat received from the server');
         // Additional logic if needed
       });
     
       // Clean up the listener when the component unmounts
       return () => {
-        socket.off('heartbeat-received');
+        socket.off('heartbeat-recieved');
       };
     }, [socket]);
 

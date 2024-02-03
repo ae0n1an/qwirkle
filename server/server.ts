@@ -174,7 +174,7 @@ io.on('connection', (socket: any) => {
 
     // Handle reconnect event
     socket.on('reconnect', () => {
-        console.log(`socket with user ID ${id} reconnected restarting timeout\n`);
+        console.log(`socket with user ID ${id} reconnected\n`);
         const lobbyId = playerToLobby[id];
         if (lobbyId) {
             // Start the lobby-specific timeout
