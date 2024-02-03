@@ -37,7 +37,7 @@ export function SocketProvider({ id, children } : {id: string, children: ReactNo
     useEffect(() => {
       const heartbeatInterval = setInterval(() => {
         // Send a heartbeat message to the server
-        if (socket) {
+        if (socket && socket.connected) {
           socket.emit('heartbeat');
         }
       }, 10000); // send every 10 seconds
@@ -48,17 +48,20 @@ export function SocketProvider({ id, children } : {id: string, children: ReactNo
       };
     }, [socket]);
 
-    /*
-
     useEffect(() => {
-      if (socket == null) return
-
-      socket.on('heartbeat-recieved', updateLobby)
-
-      return () => { socket.off('heartbeat-recieved') }
-    }, [socket, updateLobby])
-
-    */
+      if (socket == null) return;
+    
+      // Set up the listener for the 'heartbeat-received' event
+      socket.on('heartbeat-received', () => {
+        console.log('Heartbeat received from the server');
+        // Additional logic if needed
+      });
+    
+      // Clean up the listener when the component unmounts
+      return () => {
+        socket.off('heartbeat-received');
+      };
+    }, [socket]);
 
     return (
         <SocketContext.Provider value={socket}>

@@ -23,6 +23,7 @@ type PlayerType = {
 
 const lobbies: { [key: string]: {host: PlayerType; players: PlayerType[]} } = {};
 const playerToLobby: {[playerId: string]: string} = {};
+const lobbyDisconnectTimeouts = new Map();
 
 io.on('connection', (socket: any) => {
     const id = socket.handshake.query.id
@@ -32,6 +33,7 @@ io.on('connection', (socket: any) => {
         lobbies[lobbyId] = {host: player, players: [player]}
         playerToLobby[player.id] = lobbyId
         io.to(player.id).emit('receive-lobby', {lobbyId: lobbyId, lobby: lobbies[lobbyId]})
+        startDisconnectTimeout(lobbyId);
         console.log('new lobby created\nlobby id: %s host id: %s\n', lobbyId, player.id)
     });
 
@@ -46,6 +48,8 @@ io.on('connection', (socket: any) => {
                 io.to(player.id).emit('receive-lobby', {lobbyId: lobbyId, lobby: lobbies[lobbyId]})
                 //socket.broadcast.to(player.id).emit('receive-lobby', lobbies[lobbyId].players)
             });
+
+            startDisconnectTimeout(lobbyId);
 
             console.log('player added to lobby\nlobby id: %s player id: %s\n', lobbyId, newPlayer.id)
 
@@ -124,7 +128,7 @@ io.on('connection', (socket: any) => {
             }
 
             // send the disconnected player back to the homepage
-            console.log('kicked player sent back empty lobby\nplayer id: %s\n', playerId)
+            console.log('kicked player from lobby\nplayer id: %s\n', playerId)
             io.to(playerId).emit('disconnected-from-game')
         }
         else {
@@ -136,36 +140,46 @@ io.on('connection', (socket: any) => {
         leaveGame(lobbyId, playerId)
     });
 
-    // Handle disconnect event
-    socket.on('disconnect', () => {
-        console.log(`socket with user ID ${id} disconnected\n`);
-        // Your handling logic here...
-    });
-
-    // Set an initial timeout for 30 seconds to disconnect the socket if no heartbeat is received
-    let disconnectTimeout: NodeJS.Timeout;
-
-    function startDisconnectTimeout() {
-        disconnectTimeout = setTimeout(() => {
-            console.log(`No heartbeat received in 30 seconds from user with ID: ${id}\n`);
-            leaveGame(playerToLobby[id], id);
-        }, 30000);
+    function startDisconnectTimeout(lobbyId: string) {
+        lobbyDisconnectTimeouts.set(lobbyId, setTimeout(() => {
+            console.log(`No heartbeat received in 30 seconds from user with ID: ${id} in lobby: ${lobbyId}\n`);
+            leaveGame(lobbyId, id);
+        }, 30000));
     }
-
-    // Start the initial timeout
-    startDisconnectTimeout();
 
     // Update the remaining time and reset the timeout if a heartbeat is received
     socket.on('heartbeat', () => {
         console.log(`Received heartbeat from user with ID: ${id}\n`);
 
-        io.to(id).emit('heartbeat-recieved')
+        io.to(id).emit('heartbeat-recieved');
 
-        // Clear the existing timeout by setting it to null
-        clearTimeout(disconnectTimeout);
+        const lobbyId = playerToLobby[id];
+        if (lobbyId) {
+            // Clear the lobby-specific existing timeout by setting it to null
+            clearTimeout(lobbyDisconnectTimeouts.get(lobbyId));
+            // Start the lobby-specific timeout with the remaining time
+            startDisconnectTimeout(lobbyId);
+        }
+    });
 
-        // Start the timeout with the remaining time
-        startDisconnectTimeout();
+    // Handle disconnect event
+    socket.on('disconnect', () => {
+        console.log(`socket with user ID ${id} disconnected from socket\n`);
+        const lobbyId = playerToLobby[id];
+        if (lobbyId) {
+            // Clear the lobby-specific timeout
+            // clearTimeout(lobbyDisconnectTimeouts.get(lobbyId));
+        }
+    });
+
+    // Handle reconnect event
+    socket.on('reconnect', () => {
+        console.log(`socket with user ID ${id} reconnected restarting timeout\n`);
+        const lobbyId = playerToLobby[id];
+        if (lobbyId) {
+            // Start the lobby-specific timeout
+            startDisconnectTimeout(lobbyId);
+        }
     });
 
 })

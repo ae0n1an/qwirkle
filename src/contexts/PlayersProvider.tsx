@@ -55,13 +55,12 @@ export function PlayersProvider({ id, children } : {id: string, children: ReactN
         if (socket == null) return
     
         const disconnectedFromGame = () => {
-            leaveLobby()
             navigate('/', { state: { errorMessage: "Disconnected from game"} });
         };
     
         socket.on('disconnected-from-game', disconnectedFromGame)
     
-        return () => { socket.off('disconnected-from-lobby') }
+        return () => { socket.off('disconnected-from-game') }
       }, [socket])
     
 
