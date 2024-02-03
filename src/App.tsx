@@ -1,5 +1,5 @@
 import './App.css';
-import { Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import GamePage from './pages/GamePage';
 import LobbyPage from './pages/LobbyPage';
 import Home from './pages/HomePage';
@@ -19,11 +19,11 @@ function App() {
       <SocketProvider id={id}>
         <GameProvider id={id}>
           <PlayersProvider id={id}>
-            <Routes>
-              <Route path='/lobby' element={<LobbyPage/>}> </Route>
-              <Route path='/game' element={<GamePage id={id}/>}> </Route>
-              <Route path='/' element={<Home nickname={nickname} setNickname={setNickname} avatar={avatar} setAvatar={setAvatar}/>}> </Route>
-            </Routes>
+              <Routes>
+                <Route path='/lobby' element={<LobbyPage/>}/>
+                <Route path='/game' element={<GamePage id={id}/>}/>
+                <Route path='/' element={<Home nickname={nickname} setNickname={setNickname} avatar={avatar} setAvatar={setAvatar}/>}/>
+              </Routes>
           </PlayersProvider>
         </GameProvider>
       </SocketProvider>
