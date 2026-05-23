@@ -64,71 +64,33 @@ function DisplayGame(props: DisplayGameProps) {
   };
 
   return (
-      <div className="center mdl-grid">
-        <div className="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--6-col-phone board">
-          <DisplayBoard board={board.board} setBoard={setBoard} setPlayer={setPlayer} game={game} playerId={playerId} playerById={!isLocal}></DisplayBoard>
+    <div className="game-layout">
+      <div className="game-play">
+        <DisplayBoard board={board.board} setBoard={setBoard} setPlayer={setPlayer} game={game} playerId={playerId} playerById={!isLocal}/>
+        <div className="hand-wrapper">
+          <TokenHolder player={player.player} setBoard={setBoard} setPlayer={setPlayer} game={game} playerId={playerId} playerById={!isLocal}/>
         </div>
-        <div className="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
-          <div className="mdl-grid">
-            <div className="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-              <h2>{status.status}</h2>
-            </div>
-            <div className="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-              <TokenHolder player={player.player} setBoard={setBoard} setPlayer={setPlayer} game={game} playerId={playerId} playerById={!isLocal}></TokenHolder>
-            </div>
-            <div className="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-              <div className="mdl-grid">
-                <div className="mdl-cell mdl-cell--3-col mdl-cell--2-col-tablet mdl-cell--1-col-phone">
-                  <button className="mdl-button mdl-button--raised mdl-button--colored mdl-color--blue game_button" disabled={!isLocal && !game.isMyTurn(playerId)} onClick={() => undoClicked()}>
-                    <UndoIcon/>
-                    <br></br>
-                    <span>
-                      Undo
-                    </span>
-                  </button>
-                </div>
-                <div className="mdl-cell mdl-cell--3-col mdl-cell--2-col-tablet mdl-cell--1-col-phone">
-                  <button className="mdl-button mdl-button--raised mdl-button--colored mdl-color--purple game_button" disabled={!isLocal && !game.isMyTurn(playerId)} onClick={() => shuffleHand()}>
-                    <RefreshIcon/>
-                    <br></br>
-                    <span>
-                      New Tokens
-                    </span>
-                  </button>
-                </div>
-                <div className="mdl-cell mdl-cell--3-col mdl-cell--2-col-tablet mdl-cell--1-col-phone">
-                  <button className="mdl-button mdl-button--raised mdl-button--colored mdl-color--red game_button" disabled={!isLocal && !game.isMyTurn(playerId)} onClick={() => undoAllClicked()}>
-                    <ArrowDownwardIcon/>
-                    <br></br>
-                    <span>
-                      Undo All
-                    </span>
-                  </button>
-                </div>
-                <div className="mdl-cell mdl-cell--3-col mdl-cell--2-col-tablet mdl-cell--1-col-phone">
-                  <button className="mdl-button mdl-button--raised mdl-button--colored mdl-color--green game_button" disabled={!isLocal && !game.isMyTurn(playerId)} onClick={() => confirmMove()}>
-                    <DoneIcon/>
-                    <br></br>
-                    <span>
-                      Done
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div className="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-              <div className="mdl-grid">
-                <div className="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
-                  <PlayersDisplay players = {game.getPlayers()}/>
-                </div>
-                <div className="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
-                  <TokenCountDisplay tokenCount = {game.getRemainingTokenCount()}/>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div className="game-buttons">
+          <button className="game_button btn-blue" disabled={!isLocal && !game.isMyTurn(playerId)} onClick={() => undoClicked()}>
+            <UndoIcon fontSize="small"/><span>Undo</span>
+          </button>
+          <button className="game_button btn-purple" disabled={!isLocal && !game.isMyTurn(playerId)} onClick={() => shuffleHand()}>
+            <RefreshIcon fontSize="small"/><span>New Tokens</span>
+          </button>
+          <button className="game_button btn-red" disabled={!isLocal && !game.isMyTurn(playerId)} onClick={() => undoAllClicked()}>
+            <ArrowDownwardIcon fontSize="small"/><span>Undo All</span>
+          </button>
+          <button className="game_button btn-green" disabled={!isLocal && !game.isMyTurn(playerId)} onClick={() => confirmMove()}>
+            <DoneIcon fontSize="small"/><span>Done</span>
+          </button>
         </div>
       </div>
+      <div className="game-sidebar">
+        <h2 className="game-status">{status.status}</h2>
+        <PlayersDisplay players={game.getPlayers()}/>
+        <TokenCountDisplay tokenCount={game.getRemainingTokenCount()}/>
+      </div>
+    </div>
   );
 }
 

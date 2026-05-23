@@ -35,9 +35,9 @@ function TokenHolder(props: TokenHolderProps) {
 
   const wrapper = {
     display: 'grid',
-    gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr',
+    gridTemplateColumns: 'repeat(6, 54px)',
     transition: '300ms',
-    margin: '4%'
+    gap: '2px',
   };
 
   return (
