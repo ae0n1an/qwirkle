@@ -48,20 +48,19 @@ export function PlayersProvider({ id, children } : {id: string, children: ReactN
 
         socket.on('receive-lobby', updateLobby)
 
-        return () => { socket.off('receive-lobby') }
+        return () => { socket.off('receive-lobby', updateLobby) }
     }, [socket, updateLobby])
 
     useEffect(() => {
         if (socket == null) return
-    
+
         const disconnectedFromGame = () => {
             navigate('/', { state: { errorMessage: "Disconnected from game"} });
         };
-    
+
         socket.on('disconnected-from-game', disconnectedFromGame)
-    
-        return () => { socket.off('disconnected-from-game') }
-      }, [socket])
+        return () => { socket.off('disconnected-from-game', disconnectedFromGame) }
+    }, [socket])
     
 
     function joinLobby(providedLobbyId: string, name: string, avatar:string) {

@@ -30,27 +30,24 @@ export function GameProvider({ id, children } : {id: string, children: ReactNode
 
     const updateGame = useCallback(({game}: {game: any}) => {
         setGame(game);
-    }, [setGame, game])
+    }, [setGame])
 
     useEffect(() => {
         if (socket == null) return
-    
         socket.on('game-updated', updateGame)
-    
-        return () => { socket.off('game-updated') }
-    }, [socket])
+        return () => { socket.off('game-updated', updateGame) }
+    }, [socket, updateGame])
 
     useEffect(() => {
         if (socket == null) return
-    
+
         const gameStarted = ({ game }: { game: any }) => {
             updateGame({game})
             navigate('/game');
         };
-    
+
         socket.on('game-started', gameStarted)
-    
-        return () => { socket.off('game-started') }
+        return () => { socket.off('game-started', gameStarted) }
     }, [socket, updateGame])
 
     function startGame(players: PlayerType[]) {

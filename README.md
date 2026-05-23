@@ -1,17 +1,51 @@
-# About this project
+# Qwirkle
 
-This project is a web version of the popular board game qwirkle: https://en.wikipedia.org/wiki/Qwirkle
+A web-based multiplayer version of the board game [Qwirkle](https://en.wikipedia.org/wiki/Qwirkle) — place tiles that share a colour or shape to score points.
 
-## Current Progress
+Built with React + TypeScript on the frontend and a Node.js + Socket.io server for real-time multiplayer.
 
-The app is working locally and online play using sockets with socket io has been implemented. To create a
-game the host game button should be clicked and then others can join via by entering the generated 'lobby id'.
-In future a chat functionality may be implemented
+## Features
 
-### Running the app
+- **Online multiplayer** — create a lobby, share the invite link, and play with friends in real-time
+- **Local play** — play a 4-player local game instantly, no account needed
+- **Responsive UI** — works on desktop and mobile (portrait layout with board + tile rack)
 
-Clone this git repo onto your local machine and run the `npm start` command from the root directory.
-The 'play locally with 4 players' method is currently working without the server. If you want to play
-via the server it may be down but is sometimes being hosted on render.com so the app may connect
-automatically. If it is down then the server can be ran by navigating to the /server directory and
-running the `npm install` and `nodemon server.ts` commands.
+## Running locally
+
+### Frontend
+
+```bash
+npm install
+npm start
+```
+
+Opens at `http://localhost:3000`. The "Play Locally with 4 players" button works without a server.
+
+### Server (for online multiplayer)
+
+```bash
+cd server
+npm install
+npm run devStart
+```
+
+The server runs on port `5000` by default. The client connects to `https://qworkle-server.onrender.com` by default — to point it at your local server instead, update the URL in `src/contexts/SocketProvider.tsx`.
+
+## How to play online
+
+1. One player clicks **Host Game**, enters a nickname and picks a colour
+2. Share the **invite link** (copy button in the lobby)
+3. Other players open the link — it auto-fills the lobby code
+4. Once 2–4 players have joined, the host clicks **Start Game**
+
+## Architecture
+
+```
+/src                React frontend
+  /classes          Game domain model (Board, Player, Game, Token, Position)
+  /contexts         React context providers (Socket, Players, Game)
+  /pages            Route-level components (Home, Lobby, Game)
+/server             Node.js + Socket.io server
+```
+
+The game state is serialised/deserialised over Socket.io so all players stay in sync. Disconnect detection uses a per-player 30-second heartbeat timeout.

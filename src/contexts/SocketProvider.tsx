@@ -52,14 +52,12 @@ export function SocketProvider({ id, children } : {id: string, children: ReactNo
       if (socket == null) return;
     
       // Set up the listener for the 'heartbeat-recieved' event
-      socket.on('heartbeat-recieved', () => {
+      socket.on('heartbeat-received', () => {
         console.log('Heartbeat received from the server');
-        // Additional logic if needed
       });
-    
-      // Clean up the listener when the component unmounts
+
       return () => {
-        socket.off('heartbeat-recieved');
+        socket.off('heartbeat-received');
       };
     }, [socket]);
 
