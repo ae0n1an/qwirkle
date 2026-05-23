@@ -2,45 +2,30 @@ import React from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 
 export interface IApplicationProps {
-    players: {
-        id: string,
-        name: string,
-        avatar: string
-    }[];
-    isHost: boolean
+  players: { id: string; name: string; avatar: string }[];
+  isHost: boolean;
 }
 
-const PlayersLobbyDisplay: React.FunctionComponent<IApplicationProps> = (props) => {
-    const { players, isHost } = props;
-
-    const renderedOutput: JSX.Element[] = []
-
-    const handleKickClick = () => {
-        // Create a temporary textarea to copy the text
-        console.log("kick")
-      };
-
-    players.forEach((player, index) => {
-        renderedOutput.push(<div className="mdl-list__item" key={index}>
-        <span className="mdl-list__item-primary-content">
-            <i className="material-icons mdl-list__item-avatar" style={{color: player.avatar}}>person</i>
-            <span>{player.name}</span>
-        </span>
-        {index === 0 ? <div className="mdl-list__item-secondary-action">Host</div> : 
-            (isHost ? 
-            <div className="mdl-list__item-secondary-action">
-                <button title="Kick" className="mdl-button mdl-js-button mdl-button--icon" onClick={handleKickClick}><CloseIcon/></button>
-            </div> : <></>)}
-    </div>)
-    });
-
-    return (
-        <>
-            <div className="mdl-list">
-                {renderedOutput}
-            </div>
-        </>
-    );
+const PlayersLobbyDisplay: React.FunctionComponent<IApplicationProps> = ({ players, isHost }) => {
+  return (
+    <div className="lobby-player-list">
+      {players.map((player, index) => (
+        <div className="lobby-player" key={index}>
+          <div className="lobby-player-avatar" style={{ backgroundColor: player.avatar }}>
+            {player.name.charAt(0).toUpperCase()}
+          </div>
+          <span className="lobby-player-name">{player.name}</span>
+          {index === 0 ? (
+            <span className="lobby-player-badge">Host</span>
+          ) : isHost ? (
+            <button className="lobby-kick-btn" title="Kick" onClick={() => console.log('kick')}>
+              <CloseIcon fontSize="small" />
+            </button>
+          ) : null}
+        </div>
+      ))}
+    </div>
+  );
 };
 
 export default PlayersLobbyDisplay;

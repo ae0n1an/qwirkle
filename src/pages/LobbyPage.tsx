@@ -1,52 +1,68 @@
 import '../App.css';
-import { Game } from "../classes/game";
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import PlayersLobbyDisplay from '../PlayersLobbyDisplay';
 import { usePlayers } from '../contexts/PlayersProvider';
-import { useSocket } from '../contexts/SocketProvider';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { useGame } from '../contexts/GameProvider';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import CheckIcon from '@mui/icons-material/Check';
 
 function LobbyPage() {
-  const { players, lobbyId, isHost } = usePlayers()
-  const { startGame } = useGame()
-  const socket = useSocket()
-  const navigate = useNavigate(); // Use the useNavigate hook here
+  const { players, lobbyId, isHost } = usePlayers();
+  const { startGame } = useGame();
+  const [copied, setCopied] = useState(false);
 
   const handleCopyClick = () => {
-    // Create a temporary textarea to copy the text
-    const textarea = document.createElement('textarea');
-    textarea.value = lobbyId;
-    document.body.appendChild(textarea);
-    textarea.select();
-
-    // Execute the copy command
-    document.execCommand('copy');
-
-    // Remove the temporary textarea
-    document.body.removeChild(textarea);
+    const joinUrl = `${window.location.origin}/?lobby=${lobbyId}`;
+    navigator.clipboard.writeText(joinUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
   };
 
-  const handleStartGame = (e: any) => {
-    e.preventDefault()
-    startGame(players)
+  const handleStartGame = (e: React.MouseEvent) => {
+    e.preventDefault();
+    startGame(players);
   };
 
   return (
-    <div className="HostGame">
-        <h3>Lobby Code:</h3>
-        <h3>
-          <strong>{lobbyId}</strong>
-          <button title="Copy" className="mdl-button mdl-js-button mdl-button--icon" onClick={handleCopyClick}>
-            <ContentCopyIcon/>
-          </button>
-        </h3>
-        <PlayersLobbyDisplay players={players} isHost={isHost}/>
-        <br></br>
-        {isHost ? <><Link to="/game" onClick={handleStartGame} style={{pointerEvents: players.length > 1 ? 'all' : 'none'}}>Start Game</Link> <br></br>or<br></br></> : <></>}
-        <Link to="/">Go Back</Link>
+    <div className="home-page">
+      <div className="home-hero">
+        <h1 className="home-title">QWIRKLE</h1>
+        <p className="home-subtitle">Game Lobby</p>
+      </div>
+
+      <div className="home-card">
+        <div className="lobby-code-section">
+          <span className="lobby-code-label">Invite Link</span>
+          <div className="lobby-code-row">
+            <span className="lobby-code">{lobbyId}</span>
+            <button
+              className={`lobby-copy-btn${copied ? ' copied' : ''}`}
+              onClick={handleCopyClick}
+              title="Copy join link"
+            >
+              {copied ? <CheckIcon fontSize="small" /> : <ContentCopyIcon fontSize="small" />}
+              <span style={{ marginLeft: 4, fontSize: '0.75rem', fontWeight: 600 }}>
+                {copied ? 'Copied!' : 'Copy Link'}
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <PlayersLobbyDisplay players={players} isHost={isHost} />
+
+        {isHost && (
+          <Link
+            to="/game"
+            className={`home-btn home-btn-primary${players.length < 2 ? ' disabled' : ''}`}
+            onClick={handleStartGame}
+          >
+            Start Game
+          </Link>
+        )}
+
+        <Link to="/" className="home-btn home-btn-local">← Go Back</Link>
+      </div>
     </div>
   );
 }

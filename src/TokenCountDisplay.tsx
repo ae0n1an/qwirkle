@@ -2,20 +2,13 @@ type TokenCountDisplayProps = {
   tokenCount: number;
 }
 
-function TokenCountDisplay(props: TokenCountDisplayProps) {
-  const { tokenCount } = props;
-
+function TokenCountDisplay({ tokenCount }: TokenCountDisplayProps) {
   return (
-    <div className="mdl-list">
-        <div className="mdl-list__item">
-            <span className="mdl-list__item-primary-content">
-            <i className="material-icons mdl-list__item-icon">category</i>
-            <span>Remaining Tokens</span>
-            </span>
-            <div className="mdl-list__item-secondary-action">{tokenCount}</div>
-        </div>
+    <div className="sidebar-token-count">
+      <span className="sidebar-token-label">Tokens left</span>
+      <span className="sidebar-token-number">{tokenCount}</span>
     </div>
-  )
+  );
 }
 
-export default TokenCountDisplay
+export default TokenCountDisplay;

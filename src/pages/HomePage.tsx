@@ -1,85 +1,117 @@
 import '../App.css';
-import { Game } from "../classes/game";
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import {useEffect, useState} from 'react';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { usePlayers } from '../contexts/PlayersProvider';
 import { useSocket } from '../contexts/SocketProvider';
 import { useGame } from '../contexts/GameProvider';
 
-const LOCAL_PLAYERS = [{id: "", name: "Green", avatar: "#22B14C"}, {id: "", name: "Red", avatar: "#ED1C24"}, {id: "", name: "Blue", avatar: "#00A2E8"}, {id: "", name: "Orange", avatar: "#FF7F27"}]
-// {id: "", name: "Purple", avatar: "#A349A4"}, {id: "", name: "Yellow", avatar: "#FFF200"}]
+const COLOR_OPTIONS = [
+  { name: 'Green',  hex: '#22B14C' },
+  { name: 'Red',    hex: '#ED1C24' },
+  { name: 'Blue',   hex: '#00A2E8' },
+  { name: 'Orange', hex: '#FF7F27' },
+  { name: 'Purple', hex: '#A349A4' },
+  { name: 'Yellow', hex: '#FFF200' },
+];
 
-function Home({nickname, setNickname, avatar, setAvatar}:{nickname: string, setNickname:any, avatar:string, setAvatar:any}) {
+function Home({ nickname, setNickname, avatar, setAvatar }: {
+  nickname: string;
+  setNickname: (v: string) => void;
+  avatar: string;
+  setAvatar: (v: string) => void;
+}) {
   const { createLobby, joinLobby, leaveLobby, lobbyId } = usePlayers();
   const location = useLocation();
-  const [errorMessage, setErrorMessage] = useState(location.state?.errorMessage||"")
-  const [room, setRoom] = useState("");
+  const [searchParams] = useSearchParams();
+  const [errorMessage] = useState(location.state?.errorMessage || '');
+  const [room, setRoom] = useState(searchParams.get('lobby') ?? '');
   const socket = useSocket();
-  const { startGame } = useGame()
-  const navigate = useNavigate(); // Use the useNavigate hook here
+  const { startGame } = useGame();
 
-  // when the socket is updated try to leave the lobby
   useEffect(() => {
-    if (socket !== undefined && lobbyId !== "") {
-      leaveLobby()
+    if (socket !== undefined && lobbyId !== '') {
+      leaveLobby();
     }
-  }, [socket]); // run when the page mounts and when pathname is changed
+  }, [socket]);
 
-  const nicknameUpdated = () => {
-    setNickname((document.getElementById('nickname') as HTMLInputElement).value)
-  };
-
-  const avatarUpdated = () => {
-    setAvatar((document.getElementById('avatar') as HTMLInputElement).value)
-  };
-
-  const roomUpdated = () => {
-    setRoom((document.getElementById('gameCode') as HTMLInputElement).value)
-  };
-
-  function handleJoinLobby() {
-    joinLobby(room, nickname, avatar)
-  };
+  const canPlay = avatar !== '' && nickname.trim() !== '';
+  const canJoin  = canPlay && room.trim() !== '';
 
   function handleHostLobby() {
-    createLobby(nickname, avatar)
-  };
+    createLobby(nickname, avatar);
+  }
 
-  const handleStartGame = (e: any) => {
-    e.preventDefault()
-    startGame([]) // starting game with empty players will use pre definied players for the game
-  };
+  function handleJoinLobby() {
+    joinLobby(room, nickname, avatar);
+  }
+
+  function handleStartGame(e: React.MouseEvent) {
+    e.preventDefault();
+    startGame([]);
+  }
 
   return (
-    <div className="Home">
-          <div className="mdl-textfield mdl-js-textfield">
-              <input className="mdl-textfield__input" type="text" placeholder= "Enter Nickname..." id="nickname" onChange={nicknameUpdated} value={nickname}></input>
-          </div>
-          <br></br>
-          <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label has-placeholder">
-              <select className="mdl-textfield__input" id="avatar" onChange={avatarUpdated} value={avatar}>
-                  <option className="" value="">Select Color</option>
-                  <option className="g" value="#22B14C">Green</option>
-                  <option className="r" value="#ED1C24">Red</option>
-                  <option className="b" value="#00A2E8">Blue</option>
-                  <option className="o" value="#FF7F27">Orange</option>
-                  <option className="p" value="#A349A4">Purple</option>
-                  <option className="y" value="#FFF200">Yellow</option>
-              </select>
-          </div>
-          <br></br>
-          <Link to="/lobby" style={{pointerEvents: (avatar !== "" && nickname !== "") ? 'all' : 'none'}} onClick={handleHostLobby}>Host Game</Link>
-          <hr></hr>
-          <div className="mdl-textfield mdl-js-textfield">
-            <input className="mdl-textfield__input" type="text" placeholder= "Enter Lobby Code..." id="gameCode" onChange={roomUpdated}></input>
-          </div>
-          <br></br>
-          <Link to="/lobby" style={{pointerEvents: avatar !== "" && nickname !== "" && room !== "" ? 'all' : 'none'}} onClick={handleJoinLobby}>Join Game</Link>
-          <hr></hr>
-          <Link to="/game" onClick={handleStartGame}>Play Game Locally with 4 players</Link>
-          <br></br>
-          <br></br>
-          <p className="error"><b>{errorMessage}</b></p>
+    <div className="home-page">
+      <div className="home-hero">
+        <h1 className="home-title">QWIRKLE</h1>
+        <p className="home-subtitle">The colorful tile-matching game</p>
+      </div>
+
+      <div className="home-card">
+        <input
+          className="home-input"
+          type="text"
+          placeholder="Enter nickname…"
+          value={nickname}
+          onChange={e => setNickname(e.target.value)}
+        />
+
+        <div className="home-color-row">
+          {COLOR_OPTIONS.map(({ name, hex }) => (
+            <button
+              key={hex}
+              className={`color-swatch${avatar === hex ? ' selected' : ''}`}
+              style={{ backgroundColor: hex }}
+              title={name}
+              onClick={() => setAvatar(hex)}
+            />
+          ))}
+        </div>
+
+        <Link
+          to="/lobby"
+          className={`home-btn home-btn-primary${!canPlay ? ' disabled' : ''}`}
+          onClick={handleHostLobby}
+        >
+          Host Game
+        </Link>
+
+        <div className="home-divider">or join existing</div>
+
+        <input
+          className="home-input"
+          type="text"
+          placeholder="Enter lobby code…"
+          value={room}
+          onChange={e => setRoom(e.target.value)}
+        />
+
+        <Link
+          to="/lobby"
+          className={`home-btn home-btn-secondary${!canJoin ? ' disabled' : ''}`}
+          onClick={handleJoinLobby}
+        >
+          Join Game
+        </Link>
+
+        <div className="home-divider">or</div>
+
+        <Link to="/game" className="home-btn home-btn-local" onClick={handleStartGame}>
+          Play Locally with 4 players
+        </Link>
+      </div>
+
+      {errorMessage && <p className="home-error">{errorMessage}</p>}
     </div>
   );
 }
