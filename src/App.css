@@ -11,7 +11,7 @@
    * gaps+padding ~30px. So cap height at: 100vh - (54+46+30) = 100vh - 130px.
    * Also cap width at available width minus sidebar.
    */
-  width: min(calc(100vw - 290px), calc(100vh - 130px));
+  width: min(calc(100vw - 290px), calc(100vh - 154px));
   position: relative;
 }
 
@@ -134,6 +134,13 @@
 .holder {
   display: 'grid';
   grid-template-columns: '1fr 1fr 1fr 1fr 1fr 1fr';
+}
+
+.token-holder-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 72px);
+  gap: 2px;
+  transition: 300ms;
 }
 
 .tile {
@@ -670,4 +677,183 @@
   font-size: 1.1rem;
   font-weight: 700;
   color: #ffffff;
+}
+
+/* ── Mobile header (hidden on desktop) ─────────────────────── */
+
+.mobile-game-header {
+  display: none;
+}
+
+/* ── Mobile portrait layout ─────────────────────────────────── */
+
+@media (max-width: 640px) {
+
+  /* Top player bar */
+  .mobile-game-header {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 8px;
+    background: rgba(0, 0, 0, 0.45);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    width: 100%;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .mobile-player-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    min-width: 0;          /* allow chip to shrink */
+    overflow: hidden;      /* clip anything that escapes */
+    padding: 5px 7px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .mobile-player-chip.active {
+    background: rgba(139, 92, 246, 0.18);
+    border-color: rgba(139, 92, 246, 0.45);
+    box-shadow: 0 0 14px rgba(139, 92, 246, 0.25);
+  }
+
+  .mobile-player-avatar {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;       /* never shrink the avatar */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: rgba(0, 0, 0, 0.65);
+  }
+
+  .mobile-player-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;          /* allow text column to shrink */
+    gap: 1px;
+    overflow: hidden;
+  }
+
+  .mobile-player-name {
+    font-size: 0.6rem;
+    color: #9ca3af;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;           /* fill available info column width */
+    letter-spacing: 0.02em;
+  }
+
+  .mobile-player-score {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .mobile-tokens-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    padding: 4px 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+
+  .mobile-tokens-count {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1;
+  }
+
+  .mobile-tokens-label {
+    font-size: 0.55rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Lock layout to exact viewport — no scroll, no overflow */
+  .game-layout {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0;
+    gap: 0;
+    height: 100svh;
+    overflow: hidden;
+  }
+
+  /* Hide desktop sidebar */
+  .game-sidebar {
+    display: none;
+  }
+
+  /* Fill remaining height after header */
+  .game-play {
+    flex: 1;
+    min-height: 0;
+    align-items: stretch;
+    gap: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  /* Grows to fill space between header and hand, centers board inside */
+  .board-area {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Board: full viewport width, never shrinks */
+  .board-container {
+    width: 100vw;
+    flex-shrink: 0;
+  }
+
+  /* Hand sits naturally below board-area, no extra margin */
+  .hand-wrapper {
+    flex-shrink: 0;
+    padding: 0;
+    background: rgba(0, 0, 0, 0.3);
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  .token-holder-grid {
+    grid-template-columns: repeat(6, 1fr);
+    width: 100vw;
+    padding: 6px;
+    box-sizing: border-box;
+    gap: 5px;
+  }
+
+  /* Action buttons: compact strip, no extra bottom space */
+  .game-buttons {
+    flex-shrink: 0;
+    padding: 5px 6px 8px;
+    gap: 5px;
+  }
+
+  .game_button {
+    padding: 9px 2px;
+    font-size: 0.68rem;
+    border-radius: 7px;
+  }
 }

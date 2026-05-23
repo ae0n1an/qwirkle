@@ -33,16 +33,9 @@ function TokenHolder(props: TokenHolderProps) {
     
   }
 
-  const wrapper = {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(6, 54px)',
-    transition: '300ms',
-    gap: '2px',
-  };
-
   return (
     <>
-    <div style={wrapper}>
+    <div className="token-holder-grid">
         {renderedOutput}
     </div>
     </>

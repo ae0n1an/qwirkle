@@ -63,33 +63,60 @@ function DisplayGame(props: DisplayGameProps) {
     setStatus({status: game.getStatus()})
   };
 
+  const activeId = game.getActivePlayer()?.getId();
+  const myTurn = !isLocal && !game.isMyTurn(playerId);
+
   return (
     <div className="game-layout">
+
+      {/* Mobile-only top bar */}
+      <div className="mobile-game-header">
+        {game.getPlayers().map((p, i) => (
+          <div key={i} className={`mobile-player-chip${p.getId() === activeId ? ' active' : ''}`}>
+            <div className="mobile-player-avatar" style={{ backgroundColor: p.getAvatar() }}>
+              {p.getName().charAt(0).toUpperCase()}
+            </div>
+            <div className="mobile-player-info">
+              <span className="mobile-player-name">{p.getName()}</span>
+              <span className="mobile-player-score">{p.getScore()}</span>
+            </div>
+          </div>
+        ))}
+        <div className="mobile-tokens-badge">
+          <span className="mobile-tokens-count">{game.getRemainingTokenCount()}</span>
+          <span className="mobile-tokens-label">left</span>
+        </div>
+      </div>
+
       <div className="game-play">
-        <DisplayBoard board={board.board} setBoard={setBoard} setPlayer={setPlayer} game={game} playerId={playerId} playerById={!isLocal}/>
+        <div className="board-area">
+          <DisplayBoard board={board.board} setBoard={setBoard} setPlayer={setPlayer} game={game} playerId={playerId} playerById={!isLocal}/>
+        </div>
         <div className="hand-wrapper">
           <TokenHolder player={player.player} setBoard={setBoard} setPlayer={setPlayer} game={game} playerId={playerId} playerById={!isLocal}/>
         </div>
         <div className="game-buttons">
-          <button className="game_button btn-blue" disabled={!isLocal && !game.isMyTurn(playerId)} onClick={() => undoClicked()}>
+          <button className="game_button btn-blue" disabled={myTurn} onClick={() => undoClicked()}>
             <UndoIcon fontSize="small"/><span>Undo</span>
           </button>
-          <button className="game_button btn-purple" disabled={!isLocal && !game.isMyTurn(playerId)} onClick={() => shuffleHand()}>
+          <button className="game_button btn-purple" disabled={myTurn} onClick={() => shuffleHand()}>
             <RefreshIcon fontSize="small"/><span>New Tokens</span>
           </button>
-          <button className="game_button btn-red" disabled={!isLocal && !game.isMyTurn(playerId)} onClick={() => undoAllClicked()}>
+          <button className="game_button btn-red" disabled={myTurn} onClick={() => undoAllClicked()}>
             <ArrowDownwardIcon fontSize="small"/><span>Undo All</span>
           </button>
-          <button className="game_button btn-green" disabled={!isLocal && !game.isMyTurn(playerId)} onClick={() => confirmMove()}>
+          <button className="game_button btn-green" disabled={myTurn} onClick={() => confirmMove()}>
             <DoneIcon fontSize="small"/><span>Done</span>
           </button>
         </div>
       </div>
+
       <div className="game-sidebar">
         <h2 className="game-status">{status.status}</h2>
         <PlayersDisplay players={game.getPlayers()}/>
         <TokenCountDisplay tokenCount={game.getRemainingTokenCount()}/>
       </div>
+
     </div>
   );
 }
